@@ -1,23 +1,9 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
-class Game(models.Model) : 
-    id = models.IntegerField()
-    currentUser = models.IntegerField()
-    gameState = ArrayField(ArrayField(models.IntegerField()))
-
-
 class User(models.Model) : 
-    id = models.IntegerField()
+    id = models.IntegerField(primary_key=True)
     username = models.CharField(max_length = 50)
     password = models.CharField(max_length = 50)
-
-class UserGame(models.Model) : 
-    userId = models.ForeignKey(User,on_delete = models.CASCADE)
-    game = models.ForeignKey(Game,on_delete = models.CASCADE)
-    color = models.IntegerField()
-    userNumber = models.IntegerField()
-    posUserX = models.IntegerField()
-    posUserY = models.IntegerField()
 
 
