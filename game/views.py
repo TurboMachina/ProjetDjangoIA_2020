@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.decorators import login_required # permet de limiter les views aux utilisateurs connectés
 import json
 
 from django import forms

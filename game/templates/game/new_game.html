@@ -3,7 +3,20 @@
 <html>
     <body>
         <script src="{% static 'game/move.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
         <title>Game</title>
+        <table id="board">
+
+            {% for line in board %}
+            <tr>
+                {% for column in line %}
+                <td>
+                    {{column}}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
         <p><div id="my_board">{{board}}</div></p>
         <button id="my_button">Move</button>
     </body>
