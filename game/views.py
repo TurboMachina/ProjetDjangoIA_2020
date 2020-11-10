@@ -86,7 +86,6 @@ class UserGame :
         self._color = color
         self._posX = posUserX
         self._posY = posUserY
-        self._case_claimed = 0
     
     # setters et getters ?
     
@@ -117,11 +116,7 @@ class UserGame :
 
         return (x, y) # retourne les coordonées de la nouvelle case 
     
-    # Le user prend une case
-    def user_take_one_case(self): # mettre dans une boucle avec le nb de case prise par le mouvement
-        self._case_claimed += 1
     
-
 
 
 class Game : 
@@ -145,6 +140,13 @@ class Game :
             return False
 
         return True
+
+    # On change la case
+    def update_cell(self, user, x, y) : 
+        cell = # case x , y
+        if(cell == "0") : 
+            cell = user.userNumber
+            user.
     
     # function qui regarde si il ne va pas sur une case de l'adversaire
 
