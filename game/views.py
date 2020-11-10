@@ -135,6 +135,10 @@ class Game :
             return False
 
         return True
+    
+    # function qui regarde si il ne va pas sur une case de l'adversaire
+
+    # function qui compte et remplit les cases prisent 
 
 
 
