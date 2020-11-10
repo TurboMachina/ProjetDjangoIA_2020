@@ -5,7 +5,7 @@ import json
 
 from django import forms
 import random
- 
+
 
 class NewGameForm(forms.Form):
     player1 = forms.CharField(label="Player 1")
@@ -42,28 +42,11 @@ def index(request):
 
         return HttpResponse("KO")
 
-    game_state = {
-        "game_id" : 11,
-        "board" : [[1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,2]],
-        "players" : [{
-                "id" :  10,
-                "name" : "Alice",
-                "color" : "cyan",
-                "position" : [0,0]
-            },{
-                "id" :  20,
-                "name" : "Bob",
-                "color" : "orange",
-                "position" : [7,7]
-            }],
-        "current_player" : 1,
-        "code" : 0
-    }
-
-    return HttpResponse(json.dumps(game_state))
-
 def apply_move(request) :
-
+    #TODO verrif pas hors des limites du plateau
+    #TODO verrif pas une case de l'autre joueur
+    #TODO si extrèmité prendre les cases pas prenable par l'adversaire
+    #TODO verrif si game over
     random_board = [[random.randint(0,2) for i in range(8)]for i in range(8)]
     game_state = {
         "game_id" : 11,
