@@ -80,7 +80,8 @@ def apply_move(request) :
 
 class UserGame : 
 
-    def __init__(self, color, userNumber, posUserX, posUserY): # Constructeur d'un user
+    # Constructeur d'un user
+    def __init__(self, color, userNumber, posUserX, posUserY): 
         self._userNumber = userNumber # savoir si le user est 1 ou 2
         self._color = color
         self._posX = posUserX
@@ -89,12 +90,14 @@ class UserGame :
     
     # setters et getters ?
     
+    # Demande à l'utilisateur son mouvement
     def play(self):
         # ask user to click on a button UP or DOWN or LEFT or RIGHT
         # Recuperer le mouvement
 
         return movement
     
+    # Un mouvement
     def move(self, movement):
         if movement == "UP":
             x = self._posX
@@ -114,7 +117,7 @@ class UserGame :
 
         return (x, y) # retourne les coordonées de la nouvelle case 
     
-
+    # Le user prend une case
     def user_take_one_case(self): # mettre dans une boucle avec le nb de case prise par le mouvement
         self._case_claimed += 1
     
@@ -123,7 +126,8 @@ class UserGame :
 
 class Game : 
     
-    def __init__(self, id, currentUser, gameState, userGames): # Constructeur d'une game
+    # Constructeur d'une game
+    def __init__(self, id, currentUser, gameState, userGames):
         self._id = id
         self._currentUser = currentUser
         self._gameState = gameState
@@ -131,9 +135,11 @@ class Game :
     
     # setters et getters ?
     
+    # Initialisation board
     def _init_board(self):
         self._gameState = "1" + ("0" * (len(self.game_state) - 2)) + "2" # Mettre 1 en haut à gauche, 0 partout et 2 en bas à droite
 
+    # On avance en dehors du tableau
     def is_out_of_limits(self, x, y) : 
         if (x >= 0 and x < len(self.game_state)) and (y >= 0 and y < len(self.game_state)): # ? pas sur du len()
             return False
