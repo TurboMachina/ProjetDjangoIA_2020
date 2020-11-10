@@ -87,6 +87,8 @@ class UserGame :
         self._posY = posUserY
         self._case_claimed = 0
     
+    # setters et getters ?
+    
     def play(self):
         # ask user to click on a button UP or DOWN or LEFT or RIGHT
         # Recuperer le mouvement
@@ -127,6 +129,8 @@ class Game :
         self._gameState = gameState
         self._userGames = userGames
     
+    # setters et getters ?
+    
     def _init_board(self):
         self._gameState = "1" + ("0" * (len(self.game_state) - 2)) + "2" # Mettre 1 en haut à gauche, 0 partout et 2 en bas à droite
 
@@ -139,6 +143,12 @@ class Game :
     # function qui regarde si il ne va pas sur une case de l'adversaire
 
     # function qui compte et remplit les cases prisent 
+
+    # function qui affiche le tableau updated
+
+    # function qui affiche le winner
+
+    # function qui commence la game 
 
 
 
