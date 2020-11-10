@@ -132,11 +132,11 @@ class Game :
     
     # Initialisation board
     def _init_board(self):
-        self._gameState = "1" + ("0" * (len(self.game_state) - 2)) + "2" # Mettre 1 en haut à gauche, 0 partout et 2 en bas à droite
+        self._gameState = "1" + ("0" * (len(self.gameState) - 2)) + "2" # Mettre 1 en haut à gauche, 0 partout et 2 en bas à droite
 
     # On avance en dehors du tableau
     def is_out_of_limits(self, x, y) : 
-        if (x >= 0 and x < len(self.game_state)) and (y >= 0 and y < len(self.game_state)): # ? pas sur du len()
+        if (x >= 0 and x < len(self.gameState)) and (y >= 0 and y < len(self.gameState)): # ? pas sur du len()
             return False
 
         return True
