@@ -121,12 +121,15 @@ class UserGame :
 
 class Game : 
     
+
+
     # Constructeur d'une game
     def __init__(self, id, currentUser, gameState, userGames):
         self._id = id
         self._currentUser = currentUser
         self._gameState = gameState
         self._userGames = userGames
+        self._BOARDSIZE = 8
     
     # setters et getters ?
     
@@ -136,7 +139,7 @@ class Game :
 
     # On avance en dehors du tableau
     def is_out_of_limits(self, x, y) : 
-        if (x >= 0 and x < len(self.gameState)) and (y >= 0 and y < len(self.gameState)): # ? pas sur du len()
+        if (x >= 0 and x < _BOARDSIZE and (y >= 0 and y < _BOARDSIZE)): # ? pas sur du len()
             return False
 
         return True
