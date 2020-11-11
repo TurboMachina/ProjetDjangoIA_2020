@@ -7,6 +7,10 @@ import random
 def random_user_number() : 
     return random.randint(1,2)
 
+#_______________________________________________________________________________
+# FONCTION PRINCIPALE POUR JOUER
+#_______________________________________________________________________________
+
 def play(game) : 
 
     # Initiallisation du board
@@ -26,7 +30,7 @@ def play(game) :
             game.update_board() # update le board = changer le state (sans l'afficher)
 
             game.userNumber = game.next_turn(turn) # change de tour
-            
+
         else : 
             print_error() # afficher message erreur car mouvement pas possible
     
@@ -35,6 +39,21 @@ def play(game) :
 
 
 
+#_______________________________________________________________________________
+# FONCTION MAIN
+#_______________________________________________________________________________
+
+
+if __name__ == "__main__":
+    player1 = Player()
+    player2 = Player()
+
+    players = [player1, player2]
+
+    # Information a retouver grace au model BD ? 
+    game = Game(id, currentUser, gameState, players)
+
+    play(game)
 
 
 

@@ -15,6 +15,8 @@ class UserGame :
     
     # setters et getters ?
     
+# --------------------- METHODES GENERALEs DU JOUEUR ---------------------
+
     # Demande à l'utilisateur son mouvement
     def play(self):
         # ask user to click on a button UP or DOWN or LEFT or RIGHT
@@ -61,7 +63,7 @@ class Game :
     # setters et getters ?
     
 
-# --------------------- METHODES GENERALE POUR LE JEU ---------------------
+# --------------------- METHODES GENERALEs POUR LE JEU ---------------------
 
     # Initialisation board
     def init_board(self):
