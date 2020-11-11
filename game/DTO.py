@@ -1,13 +1,8 @@
 
-# 0 = case non prise
-# 1 = case prise par le joueur 1
-# 2 = case prise par le joueur 2
 
-#  x
-# |
-# |
-# |______ y
-
+#_______________________________________________________________________________
+# CLASS GAME
+#_______________________________________________________________________________
 
 class UserGame : 
 
@@ -27,7 +22,7 @@ class UserGame :
 
         return movement
     
-    # Un mouvement
+    # Appliquer le mouvement 
     def move(self, movement):
         if movement == "UP":
             x = self._posX
@@ -45,9 +40,13 @@ class UserGame :
             x = self._posX + 1
             y = self._posY 
 
-        return (x, y) # retourne les coordonées de la nouvelle case 
+        return (x, y) # retourne les coordonees de la nouvelle case 
     
     
+
+#_______________________________________________________________________________
+# CLASS GAME
+#_______________________________________________________________________________
 
 
 class Game : 
@@ -61,30 +60,63 @@ class Game :
     
     # setters et getters ?
     
+
+# --------------------- METHODES GENERALE POUR LE JEU ---------------------
+
     # Initialisation board
-    def _init_board(self):
-        self._gameState = "1" + ("0" * (len(self.gameState) - 2)) + "2" # Mettre 1 en haut à gauche, 0 partout et 2 en bas à droite
+    def init_board(self):
+        # Mettre 1 en haut a gauche, 0 partout et 2 en bas a droite
+        self._gameState = "1" + ("0" * (len(self.gameState) - 2)) + "2" 
 
-    # On avance en dehors du tableau
-    def is_out_of_limits(self, x, y) : 
-        if (x >= 0 and x < len(self.gameState)) and (y >= 0 and y < len(self.gameState)): # ? pas sur du len()
-            return False
+    # Passe au joueur suivant
+    def next_turn(turn) :
+        if(turn == 1) : 
+            return 2
+        return 1
 
-        return True
+    def get_state(self, gameState) : 
+        # Savoir si toutes les cases sont prises, retourner -1 si c'est le cas
 
     # On change la case
     def update_cell(self, user, x, y) : 
         cell = # case x , y
         if(cell == "0") : 
             cell = user.userNumber
-            user.
     
-    # function qui regarde si il ne va pas sur une case de l'adversaire
+    # Game done ?
+    def get_state(self, gameState) : 
+        # parcourir le tableau et voir si toutes les cases sont prises
+
+    def print_results() : 
+        # Afficher gagnant 
+
+    def update_board() : 
+        # function qui update le board
+    
 
     # function qui compte et remplit les cases prisent 
 
-    # function qui affiche le tableau updated
 
-    # function qui affiche le winner
 
-    # function qui commence la game 
+# --------------------- METHODES VERIFIANT SI LE MOVEMENT EST OK ---------------------
+    
+    # On avance en dehors du tableau
+    def is_out_of_limits(self, x, y) : 
+        if (x >= 0 and x < len(self.gameState)) and (y >= 0 and y < len(self.gameState)): 
+            return False
+        return True
+    
+    def case_already_taken(movement) : 
+        # function qui regarde si il ne va pas sur une case de ladversaire
+
+    def movement_ok(movement) : 
+        if(!(is_out_of_limits(movement))) : 
+            if(!(case_already_taken(movement))) : 
+                return True
+        return False
+    
+    def print_error() : 
+        # Afficher erreur car mouvement impossible 
+
+
+
