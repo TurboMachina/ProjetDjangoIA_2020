@@ -45,8 +45,10 @@ def play(game) :
 
 
 if __name__ == "__main__":
-    player1 = Player()
-    player2 = Player()
+    
+    # Information a retouver grace au model BD ? 
+    player1 = UserGame(color, userNumber, posUserX, posUserY)
+    player2 = UserGame(color, userNumber, posUserX, posUserY)
 
     players = [player1, player2]
 
