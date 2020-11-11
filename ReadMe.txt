@@ -1,4 +1,6 @@
-READ ME DU PROJET
+READ ME
+- Projet Django & IA 
+
 
 
 

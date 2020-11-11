@@ -63,7 +63,7 @@ class Game :
     # setters et getters ?
     
 
-# --------------------- METHODES GENERALEs POUR LE JEU ---------------------
+# --------------------- METHODES GENERALEs AU JEU ---------------------
 
     # Initialisation board
     def init_board(self):
@@ -92,7 +92,8 @@ class Game :
     def print_results() : 
         # Afficher gagnant 
 
-    def update_board() : 
+    def update_board(self, player, movement) : 
+        new_position_xy = player.move(movement)
         # function qui update le board
     
 

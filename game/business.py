@@ -26,9 +26,7 @@ def play(game) :
         movement = players[game.userNumber].play() # demande de jouer
 
         if(movement_ok(movement)) : # verification que le movement est possible (reprend plusieurs fonctions)
-            players[game.userNumber].move(movement) # le joueur bouge d'une case
-            game.update_board() # update le board = changer le state (sans l'afficher)
-
+            game.update_board(players[game.userNumber], movement) # update le board avec le movement du joueur et les cases prises
             game.userNumber = game.next_turn(turn) # change de tour
 
         else : 
@@ -45,7 +43,7 @@ def play(game) :
 
 
 if __name__ == "__main__":
-    
+
     # Information a retouver grace au model BD ? 
     player1 = UserGame(color, userNumber, posUserX, posUserY)
     player2 = UserGame(color, userNumber, posUserX, posUserY)
