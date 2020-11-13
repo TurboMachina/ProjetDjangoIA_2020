@@ -32,6 +32,24 @@ def joinable_games(request) :
         return render(request, "game/listJoinableGames", games)
 
 
+def my_games(request) :
+    if request.method == "GET" :
+        games = Game.objects.filter(players=request.user)
+        return render(request, "game/listGames.html", games)
+
+
+def resume_game(request, game_id) :
+    game = Game.objects.get(id=game_id)
+    if not request.user in game.players :
+        return render(request, "game/errorPage.html", {"error_message" : "you are not a player of this game"})
+    return render(request, "game/game.html", game)
+
+
+def start_game(request, game_id) :
+    game = Game.objects.get(id=game_id)
+    #TODO start game : map to DTO and start
+
+
 def join_game(request, game_id) :
     game = Game.objects.get(id=game_id)
     if request.user in game.players :
