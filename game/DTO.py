@@ -125,8 +125,8 @@ class Game :
     def get_winner(self, gameState):
         nbOne = 0
         nbTwo = 0
-        for(x = 0; x < len(self.gameState); x++) : 
-            for(y = 0; y < len(self.gameState); y++) : 
+        for(x in range(len(self.gameState)): 
+            for(y in range(len(self.gameState)):
                 if(self.gameState[x][y] == "1"):
                     nbOne++
                 else : 
