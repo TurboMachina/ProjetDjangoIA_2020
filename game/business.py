@@ -1,7 +1,7 @@
 from DTO.game import Game
 from DTO.game import UserGame
 import random
-
+import models.game
 
 # Joueur random pour debuter game
 def random_user_number() : 
@@ -36,13 +36,7 @@ def play(game) :
     game.print_result()
 
 
-
-#_______________________________________________________________________________
-# FONCTION MAIN
-#_______________________________________________________________________________
-
-
-if __name__ == "__main__":
+def launch_game():
 
     # Information a retouver grace au model BD ? 
 
@@ -54,7 +48,8 @@ if __name__ == "__main__":
 
     players = [p1, p2]
 
-    game = Game(game_id, currentUser, gameState, players)
+    #game = Game(game_id, currentUser, gameState, players)
+    game = Game.objects.get(id=game_id)
 
     play(game)
 

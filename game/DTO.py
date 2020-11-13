@@ -105,7 +105,6 @@ class Game :
 
     # Initialisation board
     def init_board(self):
-        # Mettre 1 en haut a gauche, 0 partout et 2 en bas a droite
         gameStateInt = "1" + ("0" * (len(self.gameState) - 2)) + "2" 
         self._gameState = [int(x) for x in str(gameStateInt)] 
         self._cells_left -= 2
