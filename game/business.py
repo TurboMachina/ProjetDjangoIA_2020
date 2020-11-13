@@ -20,7 +20,7 @@ def play(game) :
 
     game.turn = random_user_number() # obtenir le numero du joueur qui commence 1 ou 2
 
-    while(!(game.get_state())) : # boucle tant que toutes les cases ne sont pas prises
+    while(not(game.get_state())) : # boucle tant que toutes les cases ne sont pas prises
 
         game.print_board()
         movement = players[game.turn].play() # demande de jouer

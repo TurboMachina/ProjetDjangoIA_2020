@@ -41,7 +41,7 @@ class UserGame :
     
 # --------------------- METHODES GENERALEs DU JOUEUR ---------------------
 
-    # Demande à l'utilisateur son mouvement
+    # Demande a lutilisateur son mouvement
     def play(self):
         # ask user to click on a button UP or DOWN or LEFT or RIGHT
         # Recuperer le mouvement
@@ -81,8 +81,8 @@ class Game :
         self._id = id
         self._gameState = gameState
         self._userGames = userGames
-        self._cells_left = 64 # Initialize le nombre de case non prise à 64
-        self._turn = 0 # Initialize le tour à 0
+        self._cells_left = 64 # Initialize le nombre de case non prise a 64
+        self._turn = 0 # Initialize le tour a 0
     
 
     # Getters utiles
@@ -125,12 +125,12 @@ class Game :
     def get_winner(self, gameState):
         nbOne = 0
         nbTwo = 0
-        for(x in range(len(self.gameState)): 
-            for(y in range(len(self.gameState)):
+        for x in range(len(self.gameState)): 
+            for y in range(len(self.gameState)):
                 if(self.gameState[x][y] == "1"):
-                    nbOne++
+                    nbOne = nbOne + 1
                 else : 
-                    nbTwo++
+                    nbTwo = nbTwo + 1
 
         if nbOne > nbTwo:
             return self.userGames[0].user.username
@@ -138,11 +138,10 @@ class Game :
     
     def print_results() : 
         username = get_winner()
-        # afficher le winner
+        # Afficher sur page HTML
 
-
-    # function qui compte et remplit les cases prisent 
     def update_cells(self) : 
+            # function qui compte et remplit les cases prisent 
 
     # function qui update le board
     def update_board(self, player, movement) : 
@@ -163,8 +162,8 @@ class Game :
         # function qui regarde si il ne va pas sur une case de ladversaire
 
     def movement_ok(movement) : 
-        if(!(is_out_of_limits(movement))) : 
-            if(!(cell_already_taken(movement))) : 
+        if(not(is_out_of_limits(movement))) : 
+            if(not(cell_already_taken(movement))) : 
                 return True
         return False
     
