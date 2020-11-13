@@ -45,7 +45,6 @@ class UserGame :
     def play(self):
         # ask user to click on a button UP or DOWN or LEFT or RIGHT
         # Recuperer le mouvement
-
         return movement
     
     # Appliquer le mouvement 
@@ -123,7 +122,7 @@ class Game :
             return False
         return True
     
-    def get_winner(self, gameState){
+    def get_winner(self, gameState):
         nbOne = 0
         nbTwo = 0
         for(x = 0; x < len(self.gameState); x++) : 
@@ -136,7 +135,6 @@ class Game :
         if nbOne > nbTwo:
             return self.userGames[0].user.username
         return self.userGames[1].user.username
-    }
     
     def print_results() : 
         username = get_winner()

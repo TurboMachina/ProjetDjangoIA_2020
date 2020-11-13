@@ -45,12 +45,15 @@ def play(game) :
 if __name__ == "__main__":
 
     # Information a retouver grace au model BD ? 
-    player1 = UserGame(user, color, userNumber, posUserX, posUserY)
-    player2 = UserGame(user, color, userNumber, posUserX, posUserY)
 
-    players = [player1, player2]
+    player1 = User(user_id, username, password)
+    player2 = User(user_id, username, password)
 
-    # Information a retouver grace au model BD ? 
+    p1 = UserGame(player1, color, userNumber, posUserX, posUserY)
+    p2 = UserGame(player2, color, userNumber, posUserX, posUserY)
+
+    players = [p1, p2]
+
     game = Game(game_id, currentUser, gameState, players)
 
     play(game)
