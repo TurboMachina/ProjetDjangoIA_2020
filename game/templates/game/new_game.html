@@ -5,6 +5,9 @@
         <script src="{% static 'game/move.js' %}"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
         <title>Game</title>
+
+        <h1 id="welcome_title">Welcome</h1>
+
         <table id="board">
 
             {% for line in board %}
@@ -18,6 +21,15 @@
             {% endfor %}
         </table>
         <p><div id="my_board">{{board}}</div></p>
-        <button id="my_button">Move</button> <!--TODO changer en 4 boutons pour les 4 directions-->
+        <button id="my_button">Move</button>
+
+        <div id="move_buttons">
+            <button id="UP">UP</button>
+            <button id="DOWN">DOWN</button>
+            <button id="LEFT">LEFT</button>
+            <button id="RIGHT">RIGHT</button>
+            <!-- ID differents pour pourvoir les reconnaitre dans le JS-->
+        </div>
     </body>
 </html>
+
