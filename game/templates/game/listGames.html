@@ -1,0 +1,15 @@
+{% load static %}
+
+<html>
+    <body>
+        <h1>your games</h1>
+        <table>
+            <th>game id</th>
+            <td>resume game</td>
+            {% for game in games %}
+            <td>game.id</td>
+            <td><a href="resumeGame/{{game.id}}">resume</a></td>
+            {% endfor %}
+        </table>
+    </body>
+</html>

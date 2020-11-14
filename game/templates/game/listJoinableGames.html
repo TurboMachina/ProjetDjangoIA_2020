@@ -1,0 +1,20 @@
+{% load static %}
+<html>
+    <body>
+        <h1>Available games</h1>
+        <table>
+            <th>game id</th>
+            <th>join game</th>
+            {% for game in games %}
+            <tr>
+                <td>
+                    {{game.id}}
+                </td>
+                <td>
+                    <a href="/joinGame/{{game.id}}">join</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

@@ -118,7 +118,6 @@ class Game :
     #    return self._turn
     
     
-
 # --------------------- METHODES GENERALEs AU JEU ---------------------
 
     # Initialisation board
