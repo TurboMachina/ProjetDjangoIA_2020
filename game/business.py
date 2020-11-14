@@ -1,7 +1,7 @@
 from game.DTO import Game
 from game.DTO import UserGame
 import random
-import game.models
+import game.models as models
 
 # Joueur random pour debuter game
 def random_user_number() : 
@@ -19,7 +19,7 @@ def play(game) :
     players = game.userGames # Recuperation des deux joueurs sous forme dun tableau
 
     game.turn = random_user_number() # obtenir le numero du joueur qui commence 1 ou 2
-
+    
     game.print_board()
     movement = players[game.turn].play() # demande de jouer
  
@@ -37,17 +37,22 @@ def launch_game():
 
     # Information a retouver grace au model BD ? 
 
-    player1 = User(user_id, username, password)
-    player2 = User(user_id, username, password)
+    ######### pour tester
 
-    p1 = UserGame(player1, color, userNumber, posUserX, posUserY)
-    p2 = UserGame(player2, color, userNumber, posUserX, posUserY)
+    player1 = models.User(1, "aherrent", "abcd")
+    player2 = models.User(2, "abaert", "password")
+
+    p1 = UserGame(player1, "red", 1, 3, 7)
+    p2 = UserGame(player2, "yellow", 2, 4, 5)
 
     players = [p1, p2]
 
     #game = Game(game_id, currentUser, gameState, players)
-    game = Game.objects.get(id=game_id)
+    game = models.Game.objects.get(id=30)
 
+    #########
+
+    
     play(game)
 
 
