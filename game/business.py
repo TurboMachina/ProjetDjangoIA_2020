@@ -30,10 +30,9 @@ def play(game) :
             game.turn = game.nextturn(game.turn) # change de tour
 
         else : 
-            print_error() # afficher message erreur car mouvement pas possible
-    
+            print_error() # afficher message erreur car mouvement pas possible (ENCORE A FAIRE)
 
-    game.print_result()
+    game.print_winner() # afficher le winner (ENCORE A FAIRE)
 
 
 def launch_game():

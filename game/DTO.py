@@ -82,8 +82,9 @@ class Game :
         self._id = id
         self._gameState = gameState
         self._userGames = userGames
-        self._cells_left = 64 # Initialize le nombre de case non prise a 64
-        self._turn = 0 # Initialize le tour a 0
+        self._cells_left = 64 # Initialiser le nombre de case non prise a 64
+        self._turn = 0 # Initialiser le tour a 0
+        self._col_size = 8 # Initialiser la taille des column à 8
     
 
     # Getters utiles
@@ -100,13 +101,16 @@ class Game :
     def turn(self):
         return self._turn
     
+    def col_size(self):
+        return self._col_size
+    
     
 
 # --------------------- METHODES GENERALEs AU JEU ---------------------
 
     # Initialisation board
     def init_board(self):
-        gameStateInt = "1" + ("0" * (len(self.gameState) - 2)) + "2" 
+        gameStateInt = "1" + ("0" * (self.col_size) - 2) + "2" 
         self._gameState = [int(x) for x in str(gameStateInt)] 
         self._cells_left -= 2
 
@@ -137,14 +141,10 @@ class Game :
             # TODO : (faire un setter pour game state avec conditions ?) value userGame is unsubscriptable
             return self.userGames[0].user.username
         return self.userGames[1].user.username
-    
-    def print_results(self, gameState) : 
-        username = self.get_winner(gameState)
-        # Afficher sur page HTML
 
     def update_cells(self) :
         pass
-            # function qui compte et remplit les cases prisent 
+            # function qui remplit les cases prisent 
 
     # function qui update le board
 
@@ -175,11 +175,11 @@ class Game :
     
     # On avance en dehors du tableau
     def is_out_of_limits(self, x, y) : 
-        if (x >= 0 and x < len(self.gameState)) and (y >= 0 and y < len(self.gameState)): 
+        if (x >= 0 and x < col_size and (y >= 0 and y < col_size): 
             return False
         return True
     
-    def ccell_already_taken(self, movement) :
+    def cell_already_taken(self, movement) :
         pass
         # function qui regarde si il ne va pas sur une case de ladversaire
 
@@ -188,10 +188,6 @@ class Game :
             if(not(self.cell_already_taken(movement))) : 
                 return True
         return False
-    
-    def print_error(self) :
-        pass
-        # Afficher erreur car mouvement impossible 
 
 
 
