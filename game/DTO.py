@@ -157,13 +157,12 @@ class Game :
     # fonction qui vérifie et update un bloc de cases capturées
         # x et y = position prise par le joueur UserNumber
     def lock_won_block(self, gameState, userNumber, x, y):
-        opponentNumber = 1 if userNumber == 2 else 2
-        self.search_cell(gameState, opponentNumber, x, y)
+        self.search_cell(gameState, userNumber, x, y)
 
     def search_cell(self, gameState, opponentNumber, x, y):
-        for i in range(-1,1,2) :
-            for j in range(-1,1,2) :
-                if(gameState[x][y] == opponentNumber or self.is_out_of_limits(x+i, y+j)):
+        for i in range(-1,2,2) :
+            for j in range(-1,2,2) :
+                if(gameState[x][y] != 0 or self.is_out_of_limits(x+i, y+j)):
                     return True
                 else:
                     self.search_cell(gameState, opponentNumber, x+i, y+j)
