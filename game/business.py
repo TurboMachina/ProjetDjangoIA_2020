@@ -12,17 +12,17 @@ def random_user_number() :
 #_______________________________________________________________________________
 
 def play(game) : 
-
-    # Initiallisation du board
-    game.init_board()
+        
+    # If la game n'est pas en cours on initialise 
+    if(not(game.gameState())) :
+        game.init_board() # Initiallisation du board
+        game.turn = random_user_number() # obtenir le numero du joueur qui commence 1 ou 2
 
     players = game.userGames # Recuperation des deux joueurs sous forme dun tableau
 
-    game.turn = random_user_number() # obtenir le numero du joueur qui commence 1 ou 2
-    
     game.print_board()
     movement = players[game.turn].play() # demande de jouer
- 
+    
     if(movement_ok(movement)) : # verification que le movement est possible (reprend plusieurs fonctions)
         game.update_board(players[game.turn], movement) # update le board avec le movement du joueur et les cases prises
         game.turn = game.nextturn(game.turn) # change de tour
