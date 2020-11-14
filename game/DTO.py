@@ -45,7 +45,8 @@ class UserGame :
     def play(self):
         # ask user to click on a button UP or DOWN or LEFT or RIGHT
         # Recuperer le mouvement
-        return movement
+        pass
+        # return movement
     
     # Appliquer le mouvement 
     def move(self, movement):
@@ -110,7 +111,7 @@ class Game :
         self._cells_left -= 2
 
     # Passe au joueur suivant (UserNumber est soit 1 soit 2)
-    def next_turn(turn) :
+    def next_turn(self, turn) :
         if(turn == 1) : 
             return 2
         return 1
@@ -126,26 +127,47 @@ class Game :
         nbTwo = 0
         for x in range(len(self.gameState)): 
             for y in range(len(self.gameState)):
+                # TODO : (faire un setter pour game state avec conditions ?) value gameState is unsubscriptable
                 if(self.gameState[x][y] == "1"):
                     nbOne = nbOne + 1
                 else : 
                     nbTwo = nbTwo + 1
 
         if nbOne > nbTwo:
+            # TODO : (faire un setter pour game state avec conditions ?) value userGame is unsubscriptable
             return self.userGames[0].user.username
         return self.userGames[1].user.username
     
-    def print_results() : 
-        username = get_winner()
+    def print_results(self, gameState) : 
+        username = self.get_winner(gameState)
         # Afficher sur page HTML
 
-    def update_cells(self) : 
+    def update_cells(self) :
+        pass
             # function qui compte et remplit les cases prisent 
 
     # function qui update le board
+
+    ### si elle prennait une position plutôt qu'un mouvement elle pourrait être utilisée dans lock_won_lock avec un for 
+    ### 
     def update_board(self, player, movement) : 
         new_position_xy = player.move(movement)
-        update_cells()
+        self.update_cells()
+
+    # fonction qui vérifie et update un bloc de cases capturées
+        # x et y = position prise par le joueur UserNumber
+    def lock_won_block(self, gameState, userNumber, x, y):
+        opponentNumber = 1 if userNumber == 2 else 2
+        self.search_cell(gameState, opponentNumber, x, y)
+
+    def search_cell(self, gameState, opponentNumber, x, y):
+        for i in range(-1,1,2) :
+            for j in range(-1,1,2) :
+                if(gameState[x][y] == opponentNumber or self.is_out_of_limits(x+i, y+j)):
+                    return True
+                else:
+                    self.search_cell(gameState, opponentNumber, x+i, y+j)
+                    
 
 
 
@@ -157,16 +179,18 @@ class Game :
             return False
         return True
     
-    def ccell_already_taken(movement) : 
+    def ccell_already_taken(self, movement) :
+        pass
         # function qui regarde si il ne va pas sur une case de ladversaire
 
-    def movement_ok(movement) : 
-        if(not(is_out_of_limits(movement))) : 
-            if(not(cell_already_taken(movement))) : 
+    def movement_ok(self, movement) : # TODO : ici mouvement_ok prend un mouvement en paramètre mais is_out_of_limits prend x et y
+        if(not(self.is_out_of_limits(movement))) : 
+            if(not(self.cell_already_taken(movement))) : 
                 return True
         return False
     
-    def print_error() : 
+    def print_error(self) :
+        pass
         # Afficher erreur car mouvement impossible 
 
 

@@ -1,7 +1,7 @@
-from DTO.game import Game
-from DTO.game import UserGame
+from game.DTO import Game
+from game.DTO import UserGame
 import random
-import models.game
+import game.models
 
 # Joueur random pour debuter game
 def random_user_number() : 
