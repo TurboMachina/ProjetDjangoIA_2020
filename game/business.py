@@ -20,17 +20,15 @@ def play(game) :
 
     game.turn = random_user_number() # obtenir le numero du joueur qui commence 1 ou 2
 
-    while(not(game.get_state())) : # boucle tant que toutes les cases ne sont pas prises
+    game.print_board()
+    movement = players[game.turn].play() # demande de jouer
+ 
+    if(movement_ok(movement)) : # verification que le movement est possible (reprend plusieurs fonctions)
+        game.update_board(players[game.turn], movement) # update le board avec le movement du joueur et les cases prises
+        game.turn = game.nextturn(game.turn) # change de tour
 
-        game.print_board()
-        movement = players[game.turn].play() # demande de jouer
-
-        if(movement_ok(movement)) : # verification que le movement est possible (reprend plusieurs fonctions)
-            game.update_board(players[game.turn], movement) # update le board avec le movement du joueur et les cases prises
-            game.turn = game.nextturn(game.turn) # change de tour
-
-        else : 
-            print_error() # afficher message erreur car mouvement pas possible (ENCORE A FAIRE)
+    else : 
+        print_error() # afficher message erreur car mouvement pas possible (ENCORE A FAIRE)
 
     game.print_winner() # afficher le winner (ENCORE A FAIRE)
 
