@@ -11,7 +11,7 @@ def random_user_number() :
 # FONCTION PRINCIPALE POUR JOUER
 #_______________________________________________________________________________
 
-def play(game) : 
+def play(game):
         
     # If la game n'est pas en cours on initialise 
     if(not(game.gameState())) :
@@ -21,14 +21,15 @@ def play(game) :
     players = game.userGames # Recuperation des deux joueurs sous forme dun tableau
 
     game.print_board()
+    # TODO : c'est quoi cette méthode play() ? et players
     movement = players[game.turn].play() # demande de jouer
     
-    if(movement_ok(movement, players[game.turn])) : # verification que le movement est possible (reprend plusieurs fonctions)
+    if(game.movement_ok(movement, players[game.turn])) : # verification que le movement est possible (reprend plusieurs fonctions)
         game.update_board(players[game.turn], movement) # update le board avec le movement du joueur et les cases prises
         game.turn = game.nextturn(game.turn) # change de tour
 
     else : 
-        print_error() # afficher message erreur car mouvement pas possible (ENCORE A FAIRE)
+        game.print_error() # afficher message erreur car mouvement pas possible (ENCORE A FAIRE)
 
     game.print_winner() # afficher le winner (ENCORE A FAIRE)
 

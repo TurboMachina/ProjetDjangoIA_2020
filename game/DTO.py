@@ -142,8 +142,8 @@ class Game :
             return self.userGames[0].user.username
         return self.userGames[1].user.username
 
-    def update_cells(self) :
-        pass
+    def update_current_cells(self, x, y, turn) :
+        self.gameState[x][y] = turn
             # function qui remplit les cases prisent 
 
     # function qui update le board
@@ -152,25 +152,26 @@ class Game :
     ### 
     def update_board(self, player, movement) : 
         new_position_xy = player.move(movement)
-        self.update_cells()
+        self.update_current_cells(new_position_xy.x, new_position_xy.y, player.turn)
+        self.lock_won_block(player.new_position_xy.x, new_position_xy.y)
 
     # fonction qui vérifie et update un bloc de cases capturées
         # x et y = position prise par le joueur UserNumber
-    def lock_won_block(self, gameState, userNumber, x, y):
+    def lock_won_block(self, userNumber, x, y):
         cellsToBlock = []
-        self.search_cell(gameState, userNumber, x, y, cellsToBlock)
+        self.search_cell(userNumber, x, y, cellsToBlock)
         for cell in cellsToBlock :
-            gameState[cellsToBlock[cell]] = userNumber # TODO : a voir si le deballage est correct ici ? 
+            self.gameState[cellsToBlock[cell]] = userNumber # TODO : a voir si le deballage est correct ici ? 
 
-    def search_cell(self, gameState, userNumber, x, y, cellsToBlock):
+    def search_cell(self, userNumber, x, y, cellsToBlock):
         for i in range(-1,2,2) :
             for j in range(-1,2,2) :
-                if(gameState[x+i][y+j] == userNumber or self.is_out_of_limits(x+i, y+j)): # on regarde une de nos case ou hors plateau
+                if(self.gameState[x+i][y+j] == userNumber or self.is_out_of_limits(x+i, y+j)): # on regarde une de nos case ou hors plateau
                     return False
-                elif(gameState[x+i][y+j] != userNumber and gameState[x+i][y+j] != 0): # on regarde une case de l'adversaire
+                elif(self.gameState[x+i][y+j] != userNumber and self.gameState[x+i][y+j] != 0): # on regarde une case de l'adversaire
                     return True
                 else: # on continue a chercher (gamestate[+i][+j] == 0)
-                    result = self.search_cell(gameState, userNumber, x+i, y+j, cellsToBlock)
+                    result = self.search_cell(userNumber, x+i, y+j, cellsToBlock)
                     if(result == True):
                         cellsToBlock.append([x,y])
                     
