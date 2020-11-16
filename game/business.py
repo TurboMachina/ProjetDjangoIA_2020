@@ -23,7 +23,7 @@ def play(game) :
     game.print_board()
     movement = players[game.turn].play() # demande de jouer
     
-    if(movement_ok(movement)) : # verification que le movement est possible (reprend plusieurs fonctions)
+    if(movement_ok(movement, players[game.turn])) : # verification que le movement est possible (reprend plusieurs fonctions)
         game.update_board(players[game.turn], movement) # update le board avec le movement du joueur et les cases prises
         game.turn = game.nextturn(game.turn) # change de tour
 

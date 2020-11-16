@@ -88,19 +88,19 @@ class Game :
     
 
     # Getters utiles
-
+    @property
     def userGames(self):
         return self._userGames
-    
+    @property
     def gameState(self):
         return self._gameState
-    
+    @property
     def cells_left(self):
         return self._cells_left
-    
+    @property
     def turn(self):
         return self._turn
-    
+    @property
     def col_size(self):
         return self._col_size
     
@@ -185,13 +185,13 @@ class Game :
             return False
         return True
     
-    def cell_already_taken(self, movement) :
-        pass
+    def cell_already_taken(self, x, y, turn) :
+        return (self.gameState[x][y] != turn and self.gameState[x][y] != 0)
         # function qui regarde si il ne va pas sur une case de ladversaire
 
-    def movement_ok(self, movement) : # TODO : ici mouvement_ok prend un mouvement en paramètre mais is_out_of_limits prend x et y
-        if(not(self.is_out_of_limits(movement))) : 
-            if(not(self.cell_already_taken(movement))) : 
+    def movement_ok(self, movement, turn) :
+        if(not(self.is_out_of_limits(movement.x, movement.y))) : 
+            if(not(self.cell_already_taken(movement.x, movement.y, turn))) : 
                 return True
         return False
 
