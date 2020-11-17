@@ -4,11 +4,15 @@
     <body>
         <h1>your games</h1>
         <table>
-            <th>game id</th>
-            <td>resume game</td>
+            <tr>
+                <th>game id</th>
+                <th>resume game</th>
+            </tr>
             {% for game in games %}
-            <td>game.id</td>
-            <td><a href="resumeGame/{{game.id}}">resume</a></td>
+            <tr>
+                <td>{{game.id}}</td>
+                <td><a href="/game/resumeGame/{{game.id}}">resume</a></td>
+            </tr>
             {% endfor %}
         </table>
     </body>

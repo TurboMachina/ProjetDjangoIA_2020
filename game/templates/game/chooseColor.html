@@ -2,10 +2,10 @@
 
 <html>
     <body>
-        <h1>create game</h1>
-        <form method="POST" action="/game/createGame/">
+        <h1>your color in the game</h1>
+        <form action="joinGame/{{game_id}}/">
             {% csrf_token %}
-            {{ form }}
+            {{form}}
             <input type="submit"/>
         </form>
     </body>

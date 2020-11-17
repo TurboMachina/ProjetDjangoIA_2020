@@ -7,7 +7,7 @@
         <title>Game</title>
 
         <h1 id="welcome_title">Welcome</h1>
-
+        {% if board %}
         <table id="board">
 
             {% for line in board %}
@@ -22,7 +22,9 @@
         </table>
         <p><div id="my_board">{{board}}</div></p>
         <button id="my_button">Move</button>
-
+        {% else %}
+            
+        {% endif %}
         <div id="move_buttons">
             <button id="UP">UP</button>
             <button id="DOWN">DOWN</button>
