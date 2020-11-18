@@ -17,6 +17,37 @@ class User :
     @property
     def username(self):
         return self._username
+    
+    # --------------------- METHODES GENERALEs DU JOUEUR ---------------------
+
+     # Demande a lutilisateur son mouvement
+    def play(self):
+        # ask user to click on a button UP or DOWN or LEFT or RIGHT
+        # Recuperer le mouvement
+        pass
+        # return movement
+
+    # Appliquer le mouvement 
+    def move(self, movement):
+        x = 0
+        y = 0
+        if movement == "UP":
+            x = self._posX
+            y = self._posY - 1
+
+        elif movement == "DOWN":
+            x = self._posX
+            y = self._posY + 1
+
+        elif movement == "LEFT":L
+            x = self._posX - 1
+            y = self._posY
+
+        elif movement == "RIGHT":
+            x = self._posX + 1
+            y = self._posY
+
+        return (x, y) # retourne les coordonees de la nouvelle case
 
 
 #_______________________________________________________________________________
@@ -45,37 +76,7 @@ class UserGame :
         if newUserNumber > 0:
             self._userNumber = newUserNumber
 
-
-# --------------------- METHODES GENERALEs DU JOUEUR ---------------------
-
-    # Demande a lutilisateur son mouvement
-    def play(self):
-        # ask user to click on a button UP or DOWN or LEFT or RIGHT
-        # Recuperer le mouvement
-        pass
-        # return movement
-
-    # Appliquer le mouvement 
-    def move(self, movement):
-        x = 0
-        y = 0
-        if movement == "UP":
-            x = self._posX
-            y = self._posY - 1
-
-        elif movement == "DOWN":
-            x = self._posX
-            y = self._posY + 1
-
-        elif movement == "LEFT":L
-            x = self._posX - 1
-            y = self._posY
-
-        elif movement == "RIGHT":
-            x = self._posX + 1
-            y = self._posY
-
-        return (x, y) # retourne les coordonees de la nouvelle case
+   
 
 
 
