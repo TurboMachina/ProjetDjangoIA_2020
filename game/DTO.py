@@ -11,7 +11,10 @@ class User :
         self._password = password
 
     # Getters utiles
-
+    @property
+    def user_id(self):
+        return self._id
+    @property
     def username(self):
         return self._username
     
@@ -31,12 +34,16 @@ class UserGame :
         self._posY = posUserY
     
     # Getters utiles
-
+    @property
     def user(self):
         return self._user
-
+    @property
     def userNumber(self):
         return self._userNumber
+    @userNumber.setter
+    def userNumber(self, newUserNumber):
+        if newUserNumber > 0:
+            self._userNumber = newUserNumber
 
     
 # --------------------- METHODES GENERALEs DU JOUEUR ---------------------
@@ -50,6 +57,8 @@ class UserGame :
     
     # Appliquer le mouvement 
     def move(self, movement):
+        x = 0
+        y = 0
         if movement == "UP":
             x = self._posX
             y = self._posY - 1
@@ -82,9 +91,9 @@ class Game :
         self._id = id
         self._gameState = gameState
         self._userGames = userGames
-        self._cells_left = 64 # Initialiser le nombre de case non prise a 64
-        self._turn = 0 # Initialiser le tour a 0
         self._col_size = 8 # Initialiser la taille des column à 8
+        self._cells_left = self._col_size**2 # Initialiser le nombre de case non prise a 64 ou col_size^2
+        self._turn = 0 # Initialiser le tour a 0
     
 
     # Getters utiles
@@ -110,7 +119,7 @@ class Game :
 
     # Initialisation board
     def init_board(self):
-        gameStateInt = "1" + ("0" * (self.col_size) - 2) + "2" 
+        gameStateInt = "1" + ("0" * ((self.col_size) - 2)) + "2"
         self._gameState = [int(x) for x in str(gameStateInt)] 
         self._cells_left -= 2
 
@@ -155,34 +164,12 @@ class Game :
         self.update_current_cells(new_position_xy.x, new_position_xy.y, player.turn)
         self.lock_won_block(player.new_position_xy.x, new_position_xy.y)
 
-    # fonction qui vérifie et update un bloc de cases capturées
-        # x et y = position prise par le joueur UserNumber
-    def lock_won_block(self, userNumber, x, y):
-        cellsToBlock = []
-        self.search_cell(userNumber, x, y, cellsToBlock)
-        for cell in cellsToBlock :
-            self.gameState[cellsToBlock[cell]] = userNumber # TODO : a voir si le deballage est correct ici ? 
-
-    def search_cell(self, userNumber, x, y, cellsToBlock):
-        for i in range(-1,2,2) :
-            for j in range(-1,2,2) :
-                if(self.gameState[x+i][y+j] == userNumber or self.is_out_of_limits(x+i, y+j)): # on regarde une de nos case ou hors plateau
-                    return False
-                elif(self.gameState[x+i][y+j] != userNumber and self.gameState[x+i][y+j] != 0): # on regarde une case de l'adversaire
-                    return True
-                else: # on continue a chercher (gamestate[+i][+j] == 0)
-                    result = self.search_cell(userNumber, x+i, y+j, cellsToBlock)
-                    if(result == True):
-                        cellsToBlock.append([x,y])
-                    
-
-
 
 # --------------------- METHODES VERIFIANT SI LE MOVEMENT EST OK ---------------------
     
     # On avance en dehors du tableau
     def is_out_of_limits(self, x, y) : 
-        if (x >= 0 and x < self.col_size) and (y >= 0 and y < self.col_size) : 
+        if (x >= 0 and x < self.col_size) and (y >= 0 and y < self.col_size) :
             return False
         return True
     
@@ -196,5 +183,32 @@ class Game :
                 return True
         return False
 
+        # fonction qui vérifie et update un bloc de cases capturées
+        # x et y = position prise par le joueur UserNumber
+    def lock_won_block(self, boards, x, y, userNumber):
+        lookupTable = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        opponent = userNumber % 2 + 1
+        cellsVisited = []
+        for look in lookupTable:
+            nextx = x + look[0]
+            nexty = y + look[1]
+            if (not self.is_out_of_limits(nextx, nexty)) and boards[nextx][nexty] != 0:
+                self.find_won_block(boards, x, y, lookupTable, userNumber, opponent, cellsVisited)
+                self.fillZone(boards, userNumber, cellsVisited)
 
+    def find_won_block(self, boards, x, y, lookupTable, userNumber, opponent, cellsVisited):
+        cellsVisited.append((x, y))
+        for look in lookupTable:
+            nextx = x + look[0]
+            nexty = y + look[1]
+            if self.is_out_of_limits(nextx, nexty) or (nextx, nexty) in cellsVisited:  # on continue a chercher mais on arrive a un bord ou déjà fait
+                return False
+            if boards[nextx][nexty] == opponent:  # pas un enclos
+                return False
+            else:
+                result = self.find_won_block(boards, nextx, nexty, lookupTable, userNumber, opponent, cellsVisited)  # on continue a chercher
 
+    def fillZone(self, boards, userNumber, cellVisited):
+        for cell in cellVisited:
+            if cell == False:
+                boards[cell[0], cell[1]] = userNumber
