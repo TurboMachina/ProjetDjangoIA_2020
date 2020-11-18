@@ -47,14 +47,14 @@ class IA(UserGame) :
 
     def move() :
         # state = ? place initiale (TODO)
-        # action = take_action(state, self.Q, self.epsilon)
+        # action = play(state, self.Q, self.epsilon)
 
-        # move, reward = play() (TODO)
+        # move, reward = movement() (TODO)
 
-        # atp1 = take_action(move, Q, 0.0)
+        # atp1 = play(move, Q, 0.0)
         # update the Q function
         Q[state][action] = Q[state][action] + self.learning_rate * (reward + self.epsilon * Q [move][atp1] - Q[state][action])
-        
+
         # Change the state
         # state = stp1
 
