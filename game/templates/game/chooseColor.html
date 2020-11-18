@@ -3,7 +3,7 @@
 <html>
     <body>
         <h1>your color in the game</h1>
-        <form action="joinGame/{{game_id}}/">
+        <form method="POST" action="/game/joinGame/{{game_id}}/">
             {% csrf_token %}
             {{form}}
             <input type="submit"/>

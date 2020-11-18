@@ -5,6 +5,7 @@ from django.db.models import Count
 import json
 from game.models import *
 from django.contrib.auth.models import User
+from game import business
 
 from django import forms
 import random
@@ -56,30 +57,32 @@ def resume_game(request, game_id) :
 
 
 def start_game(request, game_id) :
-    game = Game.objects.filter(id=game_id, players__id=request.user.id).first()
-    if not game :
-        return render(request, "game/errorPage.html", {"error_message" : "you are not allow to start this game"})
-    #TODO start game : map to DTO and start
+    result = business.start_game(game_id, request.user)
+    render(request, result.template_link, result.context)
 
 
 def choose_color(request, game_id) :
-    return render(request, "chooseColor.html", {"form" : Color_player_form(), "game_id" : game_id})
+    return render(request, "game/chooseColor.html", {"form" : Color_player_form(), "game_id" : game_id})
 
 
 def join_game(request, game_id) :
     game = Game.objects.get(id=game_id)
-    if request.user in game.players :
+    players = game.players.all()
+    if request.user in players :
         return render(request, "game/errorPage.html", {"error_message" : "you are already in this game"})
 
-    if len(game.players) == 2 :
+    if len(players) == 2 :
         return render(request, "game/errorPage.html", {"error_message" : "already two players"})
     
     form = Color_player_form(request.POST)
     if not form.is_valid() :
         return render(request, "errorPage.html", {"errorMessage" : "not a valid color"})
     
-    UserGame.objects.create(userId=request.user, game=game, color=form.cleaned_data["hex_color"], userNumber=2)
-    return redirect("game/resumeGame/" + game_id + "/")
+    hex_color = int(form.cleaned_data["hex_color"].replace("#", ""), 16)
+    if UserGame.objects.filter(game__id=game_id, color=hex_color).exists() :
+        return render(request, "errorPage.html", {"error_message" : "this color is already taken"})
+    UserGame.objects.create(userId=request.user, game=game, color=hex_color, userNumber=2)
+    return redirect("resume_game", game_id)
     return render(request, "game/gameJoined.html", {"game_id", game_id})
 
 
@@ -113,7 +116,7 @@ def index(request):
 
         return HttpResponse("KO")
 
-def apply_move(request) :
+def apply_move(request, game_id) :
     random_board = [[random.randint(0,2) for i in range(8)]for i in range(8)]
     game_state = {
         "game_id" : 11,
@@ -132,6 +135,7 @@ def apply_move(request) :
         "current_player" : 1,
         "code" : 0
     }
+    business.apply_move(game_id, request.user, json.loads(request.body).move)
     return JsonResponse(game_state)
 
 

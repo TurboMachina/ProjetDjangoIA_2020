@@ -1,18 +1,30 @@
+let board
+
 window.onload = function() {
-    document.getElementById("my_button").addEventListener("click", () => {
-        main();
-    });
+  board = document.getElementById("board").children[0]
+  document.getElementById("UP").addEventListener("click", movement({"move" : {"x" : 0, "y" : -1}}))
+  document.getElementById("LEFT").addEventListener("click", movement({"move" : {"x" : -1, "y" : 0}}))
+  document.getElementById("RIGHT").addEventListener("click", movement({"move" : {"x" : 1, "y" : 0}}))
+  document.getElementById("DOWN").addEventListener("click", movement({"move" : {"x" : 0, "y" : 1}}))
 }
-async function main() {
-    const response = await jsonRPC("/game/move", {game_id: "1", player_id: "42", move: [1, 0]});
+async function main(move) {
+    const response = await jsonRPC("/game/move/" + game_id + "/", move);
     document.getElementById("my_board").textContent = JSON.stringify(response.board)
-    colorChangeBoard()
+    loadBoard()
 }
 
-function colorChangeBoard() {
-  board = document.getElementById("board").children[0]
+function movement(move) {
+  return function() {
+    main(move)
+  }
+}
+
+function loadBoard() {
   let iColumn;
   let iLine = 0;
+
+  color = ["black"]
+  for (player in players) color[player.playerNum] = player.color.toString(16);
 
   for (line of board.children) {
     iColumn = 0
@@ -21,11 +33,8 @@ function colorChangeBoard() {
       
       playerNum = response.board[iLine][iColumn]
       column.textContent = playerNum
-      
-      if (playerNum != 0)
-        column.style.backgroundColor = response.players[playerNum - 1].color
-      else 
-        column.style.backgroundColor = "black"
+      column.style.backgroundColor = color[playerNum]
+
       iColumn++
     }
     iLine++
