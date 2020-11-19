@@ -76,8 +76,6 @@ class UserGame :
             y = self._posY
 
         return (x, y) # retourne les coordonees de la nouvelle case
-   
-
 
 
 #_______________________________________________________________________________
@@ -155,8 +153,6 @@ class Game :
     def update_current_cells(self, x, y, turn) :
         self.gameState[x][y] = turn
             # function qui remplit les cases prisent
-
-    # function qui update le board
 
     ### si elle prennait une position plutôt qu'un mouvement elle pourrait être utilisée dans lock_won_lock avec un for 
     ### 
