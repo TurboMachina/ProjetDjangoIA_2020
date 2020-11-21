@@ -1,4 +1,5 @@
 let board
+let game_id
 
 window.onload = function() {
   board = document.getElementById("board").children[0]
@@ -6,11 +7,13 @@ window.onload = function() {
   document.getElementById("LEFT").addEventListener("click", movement({"move" : {"x" : -1, "y" : 0}}))
   document.getElementById("RIGHT").addEventListener("click", movement({"move" : {"x" : 1, "y" : 0}}))
   document.getElementById("DOWN").addEventListener("click", movement({"move" : {"x" : 0, "y" : 1}}))
+  game_id = document.getElementById("game_id").innerText
 }
 async function main(move) {
     const response = await jsonRPC("/game/move/" + game_id + "/", move);
-    document.getElementById("my_board").textContent = JSON.stringify(response.board)
-    loadBoard()
+    console.log(response)
+    document.getElementById("my_board").textContent = JSON.stringify(response.gameState)
+    loadBoard(response)
 }
 
 function movement(move) {
@@ -19,19 +22,19 @@ function movement(move) {
   }
 }
 
-function loadBoard() {
+function loadBoard(response) {
   let iColumn;
   let iLine = 0;
 
   color = ["black"]
-  for (player in players) color[player.playerNum] = player.color.toString(16);
+  for (player in response.players) color[player.playerNum] = player.color.toString(16);
 
   for (line of board.children) {
     iColumn = 0
 
     for (column of line.children) {
       
-      playerNum = response.board[iLine][iColumn]
+      playerNum = response.gameState[iLine][iColumn]
       column.textContent = playerNum
       column.style.backgroundColor = color[playerNum]
 

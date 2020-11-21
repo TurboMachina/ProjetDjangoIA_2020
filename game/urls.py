@@ -7,8 +7,9 @@ urlpatterns = [
     path("chooseColor/<str:game_id>/", views.choose_color),
     path("joinGame/<str:game_id>/", views.join_game),
     path("createGame/", views.create_game),
-    path("listJoinableGame/", views.joinable_games),
+    path("listJoinableGames/", views.joinable_games),
     path("myGames/", views.my_games),
     path("resumeGame/<str:game_id>/", views.resume_game),
-    path("move/<str:game_id>/", views.apply_move)
+    path("move/<str:game_id>/", views.apply_move),
+    path("startGame/<str:game_id>/", views.start_game)
 ]

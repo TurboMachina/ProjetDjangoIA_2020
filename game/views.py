@@ -58,7 +58,7 @@ def resume_game(request, game_id) :
 
 def start_game(request, game_id) :
     result = business.start_game(game_id, request.user)
-    render(request, result.template_link, result.context)
+    return render(request, result["template_link"], result["context"])
 
 
 def choose_color(request, game_id) :
@@ -88,58 +88,9 @@ def join_game(request, game_id) :
 
 def index(request):
     if request.method == "GET":
-        form = NewGameForm()
-        return render(request, "game/index.html", { "form": form })
-
-    if request.method == "POST": 
-        form = NewGameForm(request.POST)
-
-        if form.is_valid():
-            game_state = {
-                "game_id" : 11,
-                "board" : [[1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,2]],
-                "players" : [{
-                        "id" :  10,
-                        "name" : "Alice",
-                        "color" : "cyan",
-                        "position" : [0,0]
-                    },{
-                        "id" :  20,
-                        "name" : "Bob",
-                        "color" : "orange",
-                        "position" : [7,7]
-                    }],
-                "current_player" : 1,
-                "code" : 0
-            }
-            return render(request, 'game/new_game.html', game_state)
-
-        return HttpResponse("KO")
+        return render(request, "game/index.html")
 
 def apply_move(request, game_id) :
-    random_board = [[random.randint(0,2) for i in range(8)]for i in range(8)]
-    game_state = {
-        "game_id" : 11,
-        "board" : random_board,
-        "players" : [{
-                "id" :  10,
-                "name" : "Alice",
-                "color" : "cyan",
-                "position" : [0,0]
-            },{
-                "id" :  20,
-                "name" : "Bob",
-                "color" : "orange",
-                "position" : [7,7]
-            }],
-        "current_player" : 1,
-        "code" : 0
-    }
-    business.apply_move(game_id, request.user, json.loads(request.body).move)
-    return JsonResponse(game_state)
+    game = business.apply_move(game_id, request.user, json.loads(request.body)["move"])
+    return JsonResponse(game)
 
-
-
-
-
-    

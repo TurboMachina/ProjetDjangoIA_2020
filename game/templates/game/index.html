@@ -1,13 +1,7 @@
+{% extends 'game/base.html' %}
 {% load static %}
+{% block content %}
+<title>welcome</title>
+<h1>welcome</h1>
 
-<html>
-  <body>
-    <title>New Game</title>
-    <h1>Welcome in Game</h1>
-    <form method="POST" action="/game/">
-      {% csrf_token %}
-      {{ form }}
-      <input type="submit"/>
-  </form>
-  </body>
-</html>
+{% endblock content %}

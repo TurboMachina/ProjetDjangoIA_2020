@@ -1,20 +1,23 @@
+{% extends 'game/base.html' %}
 {% load static %}
-<html>
-    <body>
-        <h1>Available games</h1>
-        <table>
-            <th>game id</th>
-            <th>join game</th>
-            {% for game in games %}
-            <tr>
-                <td>
-                    {{game.id}}
-                </td>
-                <td>
-                    <a href="/game/chooseColor/{{game.id}}">join</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </body>
-</html>
+{% block content %}
+<h1>Available games</h1>
+<table>
+    {%if not games %}
+        <p>there is no game to join</p>
+    {% else %}
+        <th>game id</th>
+        <th>join game</th>
+        {% for game in games %}
+        <tr>
+            <td>
+                {{game.id}}
+            </td>
+            <td>
+                <a class=button href="/game/chooseColor/{{game.id}}">join</a>
+            </td>
+        </tr>
+        {% endfor %}
+    {% endif %}
+</table>
+{% endblock content %}

@@ -13,21 +13,39 @@ def random_user_number() :
 # FONCTION PRINCIPALE POUR JOUER
 #_______________________________________________________________________________
 
+def assign_pos(userGame, posX, posY=None) :
+    if not posY :
+        posY = posX
+    userGame.posUserX = posX
+    userGame.posUserY = posY
 
 def start_game(game_id, user) :
     games = models.Game.objects.annotate(Count("players"))
-    game = models.Game.objects.filter(id=game_id, players__id=user.id, gameState__isnull=True, players__count__exactly=2).first()
+    game = games.filter(id=game_id, players__id=user.id, gameState__isnull=True, players__count=2).first()
     if not game :
         return { "template_link" : "game/errorPage.html", "context" : {"error_message" : "you are not allow to start this game"}}
+    
     gameDTO = Game(game_id)
-    game.gameState = game.init_board()
-    game.turn = random_user_number()
+    gameDTO.init_board()
+
+    game.gameState = gameDTO.gameState
+    game.currentUser = random_user_number()
     game.save()
+
+    userGames = models.UserGame.objects.filter(game__id=game.id)
+
+    for userGame in userGames :
+        if userGame.userNumber == 1 :
+            assign_pos(userGame, 0)
+        elif userGame.userNumber == 2 :
+            assign_pos(userGame, gameDTO.col_size - 1)
+        userGame.save()
+
     return {"template_link" : "game/game.html", "context" : {"game" : game}}
 
 
 def apply_move(game_id, user, movement) :
-    userGame = models.UserGame.filter(game__id=game_id, userId__id=user.id).first()
+    userGame = models.UserGame.objects.filter(game__id=game_id, userId__id=user.id).first()
     if not userGame :
         return {"template_link" : "game/errorPage.html", "context" : {"error_message" : "you're not a player of this game"}}
     
@@ -39,20 +57,21 @@ def apply_move(game_id, user, movement) :
     
     game = userGame.game
     gameDTO = Game(game.id, game.gameState, userGame, game.currentUser)
-
-    newPosX = userGame.posUserX + movement.x
-    newPosY = userGame.posUserY + movement.y
+    print(userGame.posUserX)
+    print(userGame.posUserY)
+    newPosX = userGame.posUserX + movement["x"]
+    newPosY = userGame.posUserY + movement["y"]
     if not gameDTO.movement_ok({"x" : newPosX, "y" : newPosY}, gameDTO.turn) :
         return {"template_link" : "game/errorPage.html", "context" : {"error_message" : "invalid move"}}
     
-    gameDTO.update_board(gameDTO.turn, {"x" : newPosX, "y" : newPosY})
+    gameDTO.update_board(gameDTO.turn, {"posX" : newPosX, "posY" : newPosY})
     gameDTO.next_turn()
 
     game.gameState = gameDTO.gameState
     game.turn = gameDTO.turn
     game.save()
 
-    userGames = UserGame.filter(game__id=game.id)
+    userGames = models.UserGame.objects.filter(game__id=game.id)
     players = []
     for userGame in userGames :
         players.append(User(userGame.userId.id,

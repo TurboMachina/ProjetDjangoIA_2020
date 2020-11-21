@@ -1,11 +1,21 @@
-td {
-    width: 10px;
-    height: 10px;
-    border: 1px solid black;
-    background-color: white;
+th {
+    color: #4CAF50;
 }
 
-#welcome_title {
+td {
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    background-color: black;
+    color : white;
+    text-align: center;
+}
+
+header{
+    text-align: end;
+}
+
+h1 {
     color: #4CAF50; 
     font-family: 'Helvetica Neue', sans-serif; 
     font-size: 100px; font-weight: bold; 
@@ -14,47 +24,105 @@ td {
     text-align: center;
 }
 
-
-#UP{ 
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 15px 32px;
+p {
+    color : #4CAF50;
     text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
 }
 
-#DOWN{ 
-    background-color: #4CAF50;
-    border: none;
+body {
+    background-color: #222222;
     color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
 }
 
-#LEFT{ 
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
+table {
+    margin: auto;
 }
 
-#RIGHT{ 
-    background-color: #4CAF50;
-    border: none;
+#move_buttons {
+    align-content: center;
+    display: grid;
+}
+
+#move_buttons > button {
+    background-color: #000000;
+    border: 2px solid #4CAF50;
     color: white;
     padding: 15px 32px;
+    margin: 30px 500px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    transition-duration: 0.4s;
+    
+}
+
+#move_buttons > button:hover {
+    background-color:  #4CAF50;
+}
+
+.button {
+    font: bold 11px Arial;
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    padding: 2px 6px 2px 6px;
+    border : 1px solid #4CAF50;
+    transition-duration: 0.4s;
+}
+
+.button:hover {
+    background-color: #4CAF50;
+}
+
+
+
+
+body {
+    font-family: "Lato", sans-serif;
+    transition: background-color .5s;
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
 }

@@ -1,0 +1,32 @@
+{% load static %} 
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
+    <script src="{% static 'game/navBarControl.js' %}"></script>
+    {% block head %}
+    {% endblock head %}
+</head>
+<body>
+    <header role="banner">
+        {% if request.user.is_authenticated  %}
+            <div id="username">{{user.username}}</div>
+            <a class="button" href="/connection/logout">log out</a>
+        {% else %}
+            <a class="button" href="/connection">login</a>
+            <a class="button" href="/connection/register">register</a>
+        {% endif %}
+    </header> 
+
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="/game/createGame">Create</a>
+    <a href="/game/listJoinableGames">Join</a>
+    <a href="/game/myGames">Resume</a>
+</div>
+
+<div id="main">
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
+    {% block content %}
+    {% endblock content %}
+</div>
+</body>
+</html> 

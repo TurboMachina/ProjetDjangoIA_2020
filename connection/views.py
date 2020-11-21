@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class ConnectionForm(forms.Form) :
     username = forms.CharField(label="Username")
-    password = forms.CharField(label="Password")
+    password = forms.CharField(label="Password", widget=forms.TextInput(attrs={'type': 'password'}))
 
 class registerForm(ConnectionForm):
     email = forms.CharField(label="Email", widget=forms.EmailInput())

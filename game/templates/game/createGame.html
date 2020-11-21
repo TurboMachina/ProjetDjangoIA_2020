@@ -1,12 +1,10 @@
+{% extends 'game/base.html' %}
 {% load static %}
-
-<html>
-    <body>
-        <h1>create game</h1>
-        <form method="POST" action="/game/createGame/">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit"/>
-        </form>
-    </body>
-</html>
+{% block content %}
+<h1>create game</h1>
+<form method="POST" action="/game/createGame/">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit"/>
+</form>
+{% endblock content %}

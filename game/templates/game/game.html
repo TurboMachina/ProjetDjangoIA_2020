@@ -1,37 +1,32 @@
-{% load static %} {% csrf_token %}
+{% extends 'game/base.html' %}
+{% block head %}
+<title>Game</title>
+{% endblock head %}
+{% block content %}
+{% csrf_token %}
+<h1 id="welcome_title">Game <span id="game_id">{{game.id}}</span></h1>
+{% if game.gameState %}
+<table id="board">
+    
+    {% for line in game.gameState %}
+    <tr>
+        {% for column in line %}
+        <td>
+            {{column}}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+<div id="move_buttons">
+    <button id="UP">UP</button>
+    <button id="DOWN">DOWN</button>
+    <button id="LEFT">LEFT</button>
+    <button id="RIGHT">RIGHT</button>
+    <!-- ID differents pour pourvoir les reconnaitre dans le JS-->
+</div>
+{% else %}
+<a href="/game/startGame/{{game.id}}">start Game</a>
+{% endif %}
 
-<html>
-    <body>
-        <script src="{% static 'game/move.js' %}"></script>
-        <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
-        <title>Game</title>
-
-        <h1 id="welcome_title">Welcome</h1>
-        {% if board %}
-        <table id="board">
-
-            {% for line in board %}
-            <tr>
-                {% for column in line %}
-                <td>
-                    {{column}}
-                </td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
-        <p><div id="my_board">{{board}}</div></p>
-        <button id="my_button">Move</button>
-        {% else %}
-            
-        {% endif %}
-        <div id="move_buttons">
-            <button id="UP">UP</button>
-            <button id="DOWN">DOWN</button>
-            <button id="LEFT">LEFT</button>
-            <button id="RIGHT">RIGHT</button>
-            <!-- ID differents pour pourvoir les reconnaitre dans le JS-->
-        </div>
-    </body>
-</html>
-
+{% endblock content %}
