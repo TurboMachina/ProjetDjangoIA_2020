@@ -96,9 +96,10 @@ def play(game):
     players = game.userGames # Recuperation des deux joueurs sous forme dun tableau
 
     game.print_board()
-    # TODO : c'est quoi cette méthode play() ? et players
-    movement = players[game.turn].play() # demande de jouer
-    
+
+    # demande de jouer au joueur (click bouton) (TODO)
+
+    movement = players[game.turn].move()
     if(game.movement_ok(movement, players[game.turn])) : # verification que le movement est possible (reprend plusieurs fonctions)
         game.update_board(players[game.turn], movement) # update le board avec le movement du joueur et les cases prises
         game.turn = game.nextturn(game.turn) # change de tour
