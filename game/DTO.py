@@ -67,7 +67,7 @@ class UserGame :
             x = self._posX
             y = self._posY + 1
 
-        elif movement == "LEFT":L
+        elif movement == "LEFT":
             x = self._posX - 1
             y = self._posY
 
