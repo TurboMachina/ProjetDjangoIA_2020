@@ -1,7 +1,10 @@
 {% extends 'game/base.html' %}
 {% load static %}
 {% block content %}
-<title>welcome</title>
-<h1>welcome</h1>
-
+    <title>welcome</title>
+    {% if user.is_authenticated %}
+        <h1>welcome {{user.username}}</h1>
+    {% else %}
+        <h1>welcome</h1>
+    {% endif %}
 {% endblock content %}

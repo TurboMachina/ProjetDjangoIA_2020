@@ -1,13 +1,17 @@
-{% load static %}
-
+{% extends 'game/base.html' %}
+{% block content %}
 <html>
   <body>
     <title>Connection</title>
-    <h1>Welcome</h1>
+    <h1>Login</h1>
     <form method="POST" action="/connection/">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit"/>
+      {% csrf_token %}
+      {{ form }}
+      {% if error_message %}
+        <div id="error_message">{{error_message}}</div>
+      {% endif %}
+      <p><button class="button" type="submit">send</button></p>
     </form>
   </body>
 </html>
+{% endblock content %}

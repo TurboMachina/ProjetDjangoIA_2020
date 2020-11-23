@@ -8,7 +8,7 @@ class User :
     def __init__(self, user_id, username, color, posX, posY, userNumber): 
         self._id = user_id 
         self._username = username
-        self._color = color
+        self._color = "#{0:06x}".format(color)
         self._posX = posX
         self._posY = posY
         self._userNumber = userNumber
@@ -24,7 +24,7 @@ class User :
 
     @property
     def color(self) :
-        return self.color
+        return self._color
     
     @property
     def posX(self) :
@@ -55,6 +55,9 @@ class Game :
 
 
     # Getters utiles
+    @property
+    def id(self):
+        return id
 
     @property
     def gameState(self):
@@ -142,27 +145,7 @@ class Game :
     ### 
     def update_board(self, userNumber, position) : 
         self.update_current_cells(position["posX"], position["posY"], userNumber)
-        self.lock_won_block(userNumber, position["posX"], position["posY"])
-
-    # fonction qui vérifie et update un bloc de cases capturées
-        # x et y = position prise par le joueur UserNumber
-    
-    #def lock_won_block(self, userNumber, x, y):
-    #    cellsToBlock = []
-    #    self.search_cell(userNumber, x, y, cellsToBlock)
-    #    for cell in cellsToBlock :
-    #        self.gameState[cellsToBlock[cell]] = userNumber # TODO : a voir si le deballage est correct ici ? 
-    #def search_cell(self, userNumber, x, y, cellsToBlock):
-    #    for i in range(-1,2,2) :
-    #        for j in range(-1,2,2) :
-    #            if(self.gameState[x+i][y+j] == userNumber or self.is_out_of_limits(x+i, y+j)): # on regarde une de nos case ou hors plateau
-    #                return False
-    #            elif(self.gameState[x+i][y+j] != userNumber and self.gameState[x+i][y+j] != 0): # on regarde une case de l'adversaire
-    #                return True
-    #            else: # on continue a chercher (gamestate[+i][+j] == 0)
-    #                result = self.search_cell(userNumber, x+i, y+j, cellsToBlock)
-    #                if(result == True):
-    #                    cellsToBlock.append([x,y])
+        self.lock_won_block(self.gameState, position["posX"], position["posY"], userNumber)
 
 
 

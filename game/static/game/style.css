@@ -18,7 +18,8 @@ header{
 h1 {
     color: #4CAF50; 
     font-family: 'Helvetica Neue', sans-serif; 
-    font-size: 100px; font-weight: bold; 
+    font-size: 100px; 
+    font-weight: bold; 
     letter-spacing: -1px; 
     line-height: 1; 
     text-align: center;
@@ -29,9 +30,14 @@ p {
     text-align: center;
 }
 
+#error_message {
+    color : red;
+}
+
 body {
     background-color: #222222;
     color: white;
+    font-size: 20px; 
 }
 
 table {
@@ -68,13 +74,26 @@ table {
     color: white;
     padding: 2px 6px 2px 6px;
     border : 1px solid #4CAF50;
+    height: 30px;
+    width: 150px;
     transition-duration: 0.4s;
+    font-size: 100%;
 }
 
 .button:hover {
     background-color: #4CAF50;
 }
 
+.actual_position {
+    border: 3px double yellow;
+}
+
+
+.affiche_color {
+    width: 25px;
+    height: 20px;
+    display: inline-block;
+}
 
 
 
@@ -125,4 +144,44 @@ body {
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
+}
+
+label {
+    color: #4CAF50;
+    display: inline-block;
+    width: 90px;
+    text-align: right;
+}
+
+input {
+    font: 1em sans-serif;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 3px;
+    width: 200px;
+    box-sizing: border-box;
+
+    border: 1px solid #999;
+}
+
+form {
+    margin: 0 auto;
+    width: 320px;
+    padding: 1em;
+    border: 1px solid #CCC;
+    border-radius: 1em;
+}
+
+form > p {
+    align-content: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+form div {
+    text-align: center;
+}
+
+.center {
+    text-align: center;
 }

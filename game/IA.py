@@ -62,7 +62,7 @@ class IA(User) :
         nextState, reward = move(action)
 
         nextAction = move(nextState, self.Q, 0.0)
-
+        #TODO erreur avec Q cette variable n'existe pas 
         qtable[state][action] = Q[state][action] + self.learning_rate * (reward + self.epsilon * Q [nextState][nextAction] - Q[state][action])
 
     
