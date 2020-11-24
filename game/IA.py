@@ -72,12 +72,5 @@ class IA(User) :
 
         qtable[state][action] = qtable[state][action] + self.learning_rate * (reward + self.epsilon * qtable[nextState][nextAction] - qtable[state][action])
 
-    # Entrainement des IA, (IA contre IA)
-    def train(self, ai1, ai2, number_games) :
-        players = [ai1, ai2]
-        game = Game(players)
-
-        for game in range(number_games) : 
-            play(game)
         
 

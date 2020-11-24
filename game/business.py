@@ -18,29 +18,25 @@ def play(game):
         game.init_board() # Initiallisation du board
         game.turn = random_user_number() # obtenir le numero du joueur qui commence 1 ou 2
 
-    players = game.userGames # Recuperation des deux joueurs sous forme dun tableau
+    players = game.users # Recuperation des deux joueurs sous forme dun tableau
 
-    game.print_board()
+    if(not isinstance(players[game.turn], IA)) :
+        # demande au joueur de jouer (click bouton) (TODO)
+        movement = players[game.turn].move()
+        game.print_board()
+    else : 
+        movement = players[game.turn].play(game)
 
-    # demande de jouer au joueur (click bouton) (TODO)
-
-    movement = players[game.turn].move()
     if(game.movement_ok(movement, players[game.turn])) : # verification que le movement est possible (reprend plusieurs fonctions)
         game.update_board(players[game.turn], movement) # update le board avec le movement du joueur et les cases prises
         game.turn = game.nextturn(game.turn) # change de tour
-
     else : 
-        game.print_error() # afficher message erreur car mouvement pas possible (ENCORE A FAIRE)
+        game.print_error() # afficher message erreur car mouvement pas possible (TODO)
 
-    game.print_winner() # afficher le winner (ENCORE A FAIRE)
+    game.print_winner() # afficher le winner (TODO)
 
-
+"""
 def launch_game():
-
-    # Information a retouver grace au model BD ? 
-
-    ######### pour tester
-
     player1 = models.User(1, "aherrent", "abcd")
     player2 = models.User(2, "abaert", "password")
 
@@ -51,11 +47,29 @@ def launch_game():
 
     #game = Game(game_id, currentUser, gameState, players)
     game = models.Game.objects.get(id=30)
-
-    #########
-
-    
     play(game)
+"""
+
+
+def play_human(self, ai) : 
+    # p1 = models.User() On recupere le joueur
+    players = [p1, ai]
+
+    game = Game(players) # ajout params en fonction du code de jordan(TODO)
+
+    play(game)
+
+
+# Entrainement des IA, (IA contre IA)
+def train(self, ai1, ai2, number_games) :
+    players = [ai1, ai2]
+    game = Game(players) # ajout params en fonction du code de jordan(TODO)
+
+    for game in range(number_games) : 
+        play(game)
+    
+
+
 
 
 
