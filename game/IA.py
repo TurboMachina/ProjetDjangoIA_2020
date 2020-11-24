@@ -15,14 +15,14 @@ class IA(User):
         self._username = "IA"
         self._epsilon = epsilon
         self._learning_rate = learning_rate
-        self._qtable = []
+        self._qtable = self.initQTable()
         self.actions = [
             [-1, 0], # Up
             [1, 0], #Down
             [0, -1], # Left
             [0, 1] # Right
         ]
-    
+
     @property
     def epsilon(self):
         return self._epsilon
@@ -34,15 +34,15 @@ class IA(User):
     @property
     def qtable(self):
         return self._qtable
-    
+
     @property
-    def posX(self) : 
+    def posX(self) :
         return self.posX
-    
+
     @property
     def posY(self):
         return self.posY
-    
+
     @posX.setter
     def posX(self, posX):
         self._posX = posX
@@ -52,7 +52,10 @@ class IA(User):
         self._posY = posY
 
     def initQTable(self):
-        pass
+        QT = []
+        for _ in range(0, 64):
+            QT += [[0, 0, 0, 0]]
+        return QT
 
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
     def take_action(self, state, qtable, epsilon):
@@ -67,8 +70,8 @@ class IA(User):
         self.posY = self.posY + self.actions[action][0]
         self.posX = self.posX + self.actions[action][1]
 
-        return (self.posY, self.posX) , self.qtable[self._posY][self.posX] # retounr le state (unique) le reward associe 
-    
+        return (self.posY, self.posX) , self.qtable[self._posY][self.posX] # retounr le state (unique) le reward associe
+
 
     def play(self, game):
         state = (self.posY, self.posX) # state actuel ?
@@ -81,5 +84,5 @@ class IA(User):
 
         self.qtable[state[0]][state[1]][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
         #TODO [state]
-        
+
 

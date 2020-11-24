@@ -166,7 +166,7 @@ class Game :
                 cellsVisited.append((x, y, False))
                 return None
 
-            cellsVisited.append([x, y, True])
+            cellsVisited.append((x, y, True))
             self.find_won_block(boards, nextx, nexty, lookupTable, userNumber, opponent, cellsVisited)  # on continue a chercher
 
     def fillZone(self, boards, userNumber, cellVisited):
