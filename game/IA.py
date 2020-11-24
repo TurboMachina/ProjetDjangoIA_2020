@@ -50,7 +50,10 @@ class IA(User):
     @posY.setter
     def posY(self, posY):
         self._posY = posY
-    
+
+    def initQTable(self):
+        pass
+
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
     def take_action(self, state, qtable, epsilon):
         if random.uniform(0, 1) < epsilon:
@@ -70,13 +73,13 @@ class IA(User):
     def play(self, game):
         state = (self.posY, self.posX) # state actuel ?
 
-        action = self.take_action(state, self.qtable, self.epsilon) 
+        action = self.take_action(state, self.qtable, self.epsilon)
 
         nextState, reward = self.move(action)
 
         nextAction = self.take_action(nextState, self.qtable, 0.0) # La meilleure action
 
-        self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
-
+        self.qtable[state[0]][state[1]][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
+        #TODO [state]
         
 
