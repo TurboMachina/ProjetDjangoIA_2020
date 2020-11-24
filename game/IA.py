@@ -46,11 +46,11 @@ class IA(User) :
 
     
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
-    def take_action(state, Q, epsilon):
+    def take_action(state, qtable, epsilon):
     if random.uniform(0, 1) < epsilon:
         action = randint(0, 3) # decouverte, random entre les 4 actions possible
     else: 
-        action = np.argmax(Q[state]) # prendre le meilleur mouvement possible dans la table Q en fonction du state
+        action = np.argmax(qtable[state]) # prendre le meilleur mouvement possible dans la table Q en fonction du state
     return action
 
 
