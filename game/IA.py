@@ -8,10 +8,11 @@ import random
 from game.DTO import Game
 from game.DTO import User
 
-class IA(User) : 
+class IA(User):
 
-    def __init__(self, user_id, color, userNumber, posX, posY, epsilon=0.90, learning_rate=0.1) : # IA est un joueur, héritage
-        User.__init__(self, user_id, color, userNumber, posX, posY)
+    def __init__(self, user_id, username, color, userNumber, posX, posY, epsilon=0.90, learning_rate=0.1): # IA est un joueur, héritage
+        User.__init__(self, user_id, username, color, userNumber, posX, posY)
+        self._username = "IA"
         self._epsilon = epsilon
         self._learning_rate = learning_rate
         self._qtable = []
@@ -31,7 +32,7 @@ class IA(User) :
         return self._learning_rate
 
     @property
-    def qtable(self) : 
+    def qtable(self):
         return self._qtable
     
     @property
@@ -39,30 +40,35 @@ class IA(User) :
         return self.posX
     
     @property
-    def posY(self) : 
+    def posY(self):
         return self.posY
     
+    @posX.setter
+    def posX(self, posX):
+        self._posX = posX
 
-
+    @posY.setter
+    def posY(self, posY):
+        self._posY = posY
     
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
-    def take_action(state, qtable, epsilon):
-    if random.uniform(0, 1) < epsilon:
-        action = randint(0, 3) # decouverte, random entre les 4 actions possible
-    else: 
-        action = np.argmax(qtable[state]) # prendre le meilleur mouvement possible dans la table Q en fonction du state
-    return action
+    def take_action(self, state, qtable, epsilon):
+        if random.uniform(0, 1) < epsilon:
+            action = randint(0, 3) # decouverte, random entre les 4 actions possible
+        else:
+            action = np.argmax(qtable[state]) # prendre le meilleur mouvement possible dans la table Q en fonction du state
+        return action
 
 
-    def move(self, action) : 
+    def move(self, action):
         self.posY = self.posY + self.actions[action][0]
         self.posX = self.posX + self.actions[action][1]
 
         return (self.posY, self.posX) , self.qtable[self._posY][self.posX] # retounr le state (unique) le reward associe 
     
 
-    def play(game) :
-        state =  (self.posY, self.posX) # state actuel ?
+    def play(self, game):
+        state = (self.posY, self.posX) # state actuel ?
 
         action = self.take_action(state, self.qtable, self.epsilon) 
 
@@ -70,7 +76,7 @@ class IA(User) :
 
         nextAction = self.take_action(nextState, self.qtable, 0.0) # La meilleure action
 
-        qtable[state][action] = qtable[state][action] + self.learning_rate * (reward + self.epsilon * qtable[nextState][nextAction] - qtable[state][action])
+        self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
 
         
 

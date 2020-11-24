@@ -5,78 +5,39 @@
 class User :
 
     # Constructeur d'un User
-    def __init__(self, user_id, username, password):
+    def __init__(self, user_id, username, color, posX, posY, userNumber):
         self._id = user_id
         self._username = username
-        self._password = password
+        self._color = "#{0:06x}".format(color)
+        self._posX = posX
+        self._posY = posY
+        self._userNumber = userNumber
 
     # Getters utiles
     @property
-    def user_id(self):
+    def id(self):
         return self._id
+
     @property
     def username(self):
         return self._username
-    
 
-
-#_______________________________________________________________________________
-# CLASS USERGAME
-#_______________________________________________________________________________
-
-class UserGame :
-
-    # Constructeur d'un UserGame
-    def __init__(self, user, color, userNumber, posUserX, posUserY):
-        self._user = user
-        self._userNumber = userNumber # savoir si le user est 1 ou 2
-        self._color = color
-        self._posX = posUserX
-        self._posY = posUserY
-
-    # Getters utiles
     @property
-    def user(self):
-        return self._user
+    def color(self):
+        return self._color
+
+    @property
+    def posX(self):
+        return self._posX
+
+    @property
+    def posY(self):
+        return self._posY
+
     @property
     def userNumber(self):
         return self._userNumber
-    @userNumber.setter
-    def userNumber(self, newUserNumber):
-        if newUserNumber > 0:
-            self._userNumber = newUserNumber
-
-    # --------------------- METHODES GENERALEs DU JOUEUR ---------------------
-
-     # Demande a lutilisateur son mouvement (TODO)
-    def play(self):
-        # ask user to click on a button UP or DOWN or LEFT or RIGHT
-        # Recuperer le mouvement
-        pass
-        # return movement
-
-    # Appliquer le mouvement 
-    def move(self, movement):
-        x = 0
-        y = 0
-        if movement == "UP":
-            x = self._posX
-            y = self._posY - 1
-
-        elif movement == "DOWN":
-            x = self._posX
-            y = self._posY + 1
-
-        elif movement == "LEFT":
-            x = self._posX - 1
-            y = self._posY
-
-        elif movement == "RIGHT":
-            x = self._posX + 1
-            y = self._posY
-
-        return (x, y) # retourne les coordonees de la nouvelle case
-
+    
 
 #_______________________________________________________________________________
 # CLASS GAME
