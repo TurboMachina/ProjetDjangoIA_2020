@@ -6,7 +6,6 @@ import numpy as np
 from random import randint
 import random
 from game.DTO import Game
-from game.DTO import UserGame
 from game.DTO import User
 
 class IA(User) : 
@@ -73,7 +72,12 @@ class IA(User) :
 
         qtable[state][action] = qtable[state][action] + self.learning_rate * (reward + self.epsilon * qtable[nextState][nextAction] - qtable[state][action])
 
-    
-    def train(self) : 
-        pass
+    # Entrainement des IA, (IA contre IA)
+    def train(self, ai1, ai2, number_games) :
+        players = [ai1, ai2]
+        game = Game(players)
+
+        for game in range(number_games) : 
+            play(game)
+        
 
