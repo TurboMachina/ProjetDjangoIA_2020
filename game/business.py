@@ -83,11 +83,15 @@ def resume_game(game_id, user_id) :
         raise NotPlayerError()
 
     gameDTO = mapGame(game)
-
     userGames = models.UserGame.objects.filter(game__id=game_id).all()
     gameDTO.players = mapMultipleUsers(userGames)
 
     return gameDTO
+
+
+def launch_game():
+    player1 = models.User(1, "aherrent", "abcd")
+    player2 = models.User(2, "abaert", "password")
 
 
 def my_games(user) :
@@ -128,13 +132,23 @@ def join_game(game_id, user, form) :
     
     if not form.is_valid() :
         raise ColorInvalidError()
-
     hex_color = int(form.cleaned_data["hex_color"].replace("#", ""), 16)
 
     if hex_color == 0 :
         raise ForbidenColorError()
-
     if models.UserGame.objects.filter(game__id=game_id, color=hex_color).exists() :
         raise ColorAlreadyTakenError()
     
     models.UserGame.objects.create(userId=user, game=game, color=hex_color, userNumber=2)
+
+"""
+# Entrainement des IA, (IA contre IA)
+def train(self, ia1, ia2, number_games) :
+    players = [ia1, ia2]
+    game = Game(players) # ajout params en fonction du code de jordan(TODO)
+
+    for game in range(number_games) : 
+        play(game)
+    
+
+"""

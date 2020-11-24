@@ -2,19 +2,17 @@
 # IA
 #_______________________________________________________________________________
 
-# J'ai créé un fichier à part pour l'IA car je savais pas trop ou la mettre (TODO) 
-
 import numpy as np
 from random import randint
 import random
 from game.DTO import Game
-from game.DTO import UserGame
 from game.DTO import User
 
-class IA(User) : 
+class IA(User):
 
-    def __init__(self, user_id, color, userNumber, posX, posY, epsilon=0.90, learning_rate=0.1,) : # IA est un joueur, héritage
-        User.__init__(self, user_id, color, userNumber, posX, posY)
+    def __init__(self, user_id, username, color, userNumber, posX, posY, epsilon=0.90, learning_rate=0.1): # IA est un joueur, héritage
+        User.__init__(self, user_id, username, color, userNumber, posX, posY)
+        self._username = "IA"
         self._epsilon = epsilon
         self._learning_rate = learning_rate
         self._qtable = []
@@ -34,38 +32,51 @@ class IA(User) :
         return self._learning_rate
 
     @property
-    def qtable(self) : 
+    def qtable(self):
         return self._qtable
+    
+    @property
+    def posX(self) : 
+        return self.posX
+    
+    @property
+    def posY(self):
+        return self.posY
+    
+    @posX.setter
+    def posX(self, posX):
+        self._posX = posX
 
-
+    @posY.setter
+    def posY(self, posY):
+        self._posY = posY
     
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
-    def take_action(self, state, Q, epsilon):
+    def take_action(self, state, qtable, epsilon):
         if random.uniform(0, 1) < epsilon:
             action = randint(0, 3) # decouverte, random entre les 4 actions possible
-        else: 
-            action = np.argmax(Q[state]) # prendre le meilleur mouvement possible dans la table Q en fonction du state
+        else:
+            action = np.argmax(qtable[state]) # prendre le meilleur mouvement possible dans la table Q en fonction du state
         return action
 
-    def move(self, action) : 
-        self._posY = self._posY + self.actions[action][0]
-        self._posX = self._posX + self.actions[action][1]
 
-        return (self.y + self.x) , self.qtable[self._posY][self._posX] # ! quand on retourne le state, il doit etre unique pour chaque case (0-64) TODO
+    def move(self, action):
+        self.posY = self.posY + self.actions[action][0]
+        self.posX = self.posX + self.actions[action][1]
+
+        return (self.posY, self.posX) , self.qtable[self._posY][self.posX] # retounr le state (unique) le reward associe 
     
 
-    def play(self, game, state) :
-        # state =  recuperer x - y et les transformer pour qu'ils soit entre 0 et 64 TODO
+    def play(self, game):
+        state = (self.posY, self.posX) # state actuel ?
 
-        action = move(state, self.qtable, self.epsilon)
+        action = self.take_action(state, self.qtable, self.epsilon) 
 
-        nextState, reward = move(action)
+        nextState, reward = self.move(action)
 
-        nextAction = move(nextState, self.Q, 0.0)
-        #TODO erreur avec Q cette variable n'existe pas 
-        qtable[state][action] = Q[state][action] + self.learning_rate * (reward + self.epsilon * Q [nextState][nextAction] - Q[state][action])
+        nextAction = self.take_action(nextState, self.qtable, 0.0) # La meilleure action
 
-    
-    def train(self) : 
-        pass
+        self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
+
+        
 

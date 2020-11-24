@@ -5,8 +5,8 @@
 class User :
 
     # Constructeur d'un User
-    def __init__(self, user_id, username, color, posX, posY, userNumber): 
-        self._id = user_id 
+    def __init__(self, user_id, username, color, posX, posY, userNumber):
+        self._id = user_id
         self._username = username
         self._color = "#{0:06x}".format(color)
         self._posX = posX
@@ -15,7 +15,7 @@ class User :
 
     # Getters utiles
     @property
-    def id(self) :
+    def id(self):
         return self._id
 
     @property
@@ -23,20 +23,21 @@ class User :
         return self._username
 
     @property
-    def color(self) :
+    def color(self):
         return self._color
-    
+
     @property
-    def posX(self) :
+    def posX(self):
         return self._posX
 
     @property
-    def posY(self) :
+    def posY(self):
         return self._posY
-    
+
     @property
     def userNumber(self) :
         return self._userNumber
+    
 
 #_______________________________________________________________________________
 # CLASS GAME
