@@ -159,21 +159,20 @@ class Game :
             nextx = x + look[0]
             nexty = y + look[1]
 
+            if self.is_out_of_limits(nextx, nexty) or ((nextx, nexty, False) in cellsVisited or (nextx, nexty, True) in cellsVisited) or boards[nextx][nexty] == userNumber:  # on continue a chercher mais on arrive a un bord ou déjà fait
+                return None
+
             if boards[nextx][nexty] == opponent:  # pas un enclos
                 cellsVisited.append((x, y, False))
                 return None
 
             cellsVisited.append([x, y, True])
-            if self.is_out_of_limits(nextx, nexty) or (nextx, nexty) in cellsVisited:  # on continue a chercher mais on arrive a un bord ou déjà fait
-                return None
-
-            else:
-                self.find_won_block(boards, nextx, nexty, lookupTable, userNumber, opponent, cellsVisited)  # on continue a chercher
+            self.find_won_block(boards, nextx, nexty, lookupTable, userNumber, opponent, cellsVisited)  # on continue a chercher
 
     def fillZone(self, boards, userNumber, cellVisited):
         to_be_filled = True
         for cell in cellVisited:
-            if not cell[3]:
+            if not cell[2]:
                 to_be_filled = False
         if to_be_filled:
             for cell in cellVisited:
