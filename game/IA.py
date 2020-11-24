@@ -74,7 +74,7 @@ class IA(User):
 
 
     def play(self, game):
-        state = (self.posY, self.posX) # state actuel ?
+        state = (self.posY, self.posX) # state actuel ? # TODO State : pos + le board
 
         action = self.take_action(state, self.qtable, self.epsilon)
 
@@ -82,7 +82,7 @@ class IA(User):
 
         nextAction = self.take_action(nextState, self.qtable, 0.0) # La meilleure action
 
-        self.qtable[state[0]][state[1]][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
+        self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
         #TODO [state]
 
 
