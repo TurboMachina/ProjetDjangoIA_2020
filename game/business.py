@@ -51,9 +51,9 @@ def launch_game():
 """
 
 
-def play_human(self, ai) : 
+def play_human(self, ia) : 
     # p1 = models.User() On recupere le joueur
-    players = [p1, ai]
+    players = [p1, ia]
 
     game = Game(players) # ajout params en fonction du code de jordan(TODO)
 
@@ -61,8 +61,8 @@ def play_human(self, ai) :
 
 
 # Entrainement des IA, (IA contre IA)
-def train(self, ai1, ai2, number_games) :
-    players = [ai1, ai2]
+def train(self, ia1, ia2, number_games) :
+    players = [ia1, ia2]
     game = Game(players) # ajout params en fonction du code de jordan(TODO)
 
     for game in range(number_games) : 
