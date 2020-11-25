@@ -8,6 +8,7 @@ class Game(models.Model) :
     # grâce à related_name la classe User aura un attribut games
     # through permet de donner un Model comme table intermédiaire
     players = models.ManyToManyField(User, related_name="games", through="UserGame")
+    winner = models.IntegerField(null=True, blank=True)
 
 class UserGame(models.Model) : 
     userId = models.ForeignKey(User, on_delete = models.CASCADE)

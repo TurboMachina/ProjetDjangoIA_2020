@@ -13,4 +13,4 @@ def mapMultipleUsers(userGames) :
 
 
 def mapGame(game) :
-    return Game(game.id, game.gameState, game.currentUser)
+    return Game(game.id, game.gameState, game.currentUser, game.winner)

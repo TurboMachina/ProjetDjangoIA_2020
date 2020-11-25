@@ -57,23 +57,28 @@ def apply_move(game_id, user, movement) :
     if not userGame.userNumber == userGame.game.currentUser :
         raise NotYourTurnError()
     
+
     game = userGame.game
     gameDTO = mapGame(game)
-    newPosX = userGame.posUserX + movement["x"]
-    newPosY = userGame.posUserY + movement["y"]
-    if not gameDTO.movement_ok({"x" : newPosX, "y" : newPosY}, gameDTO.turn) :
-        raise InvalidMoveError()
-    
-    gameDTO.update_board(gameDTO.turn, {"posX" : newPosX, "posY" : newPosY})
-    gameDTO.next_turn()
+    if not gameDTO.winner :
+        newPosX = userGame.posUserX + movement["x"]
+        newPosY = userGame.posUserY + movement["y"]
+        if not gameDTO.movement_ok({"x" : newPosX, "y" : newPosY}, gameDTO.turn) :
+            raise InvalidMoveError()
+        
+        gameDTO.update_board(gameDTO.turn, {"posX" : newPosX, "posY" : newPosY})
+        if gameDTO.game_over() :
+            gameDTO.winner = gameDTO.get_winner()
+        gameDTO.next_turn()
 
-    userGame.posUserX = newPosX
-    userGame.posUserY = newPosY
-    userGame.save()
+        userGame.posUserX = newPosX
+        userGame.posUserY = newPosY
+        userGame.save()
     
-    game.gameState = gameDTO.gameState
-    game.turn = gameDTO.turn
-    game.save()
+        game.gameState = gameDTO.gameState
+        game.currentUser = gameDTO.turn
+        game.winner = gameDTO.winner
+        game.save()
 
     userGames = models.UserGame.objects.filter(game__id=game.id)
     gameDTO.players = mapMultipleUsers(userGames)
@@ -89,7 +94,6 @@ def resume_game(game_id, user_id) :
     gameDTO = mapGame(game)
     userGames = models.UserGame.objects.filter(game__id=game_id).all()
     gameDTO.players = mapMultipleUsers(userGames)
-    print(game.currentUser)
     return gameDTO
 
 

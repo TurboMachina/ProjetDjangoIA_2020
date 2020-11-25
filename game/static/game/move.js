@@ -39,13 +39,17 @@ function loadBoard(result) {
     for (column of line.children) {
       userNumber = result._gameState[iLine][iColumn]
       column.style.backgroundColor = colors[userNumber]
-      column.innerHTML = userNumber
       column.classList.remove("actual_position")
 
       iColumn++
     }
     iLine++
   }
+
+  if (result._winner) document.getElementById("winner").innerHTML = "winner is player " + result._winner
+
+  document.getElementById("turn").innerHTML = "turn of player : " + result._turn 
+
   for (player of result._players) {
     board.children[player._posX].children[player._posY].classList.add("actual_position")
   }

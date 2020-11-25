@@ -8,11 +8,11 @@
 {% block content %}
 {% csrf_token %}
 <h1 id="welcome_title">Game <span id="game_id">{{game_id}}</span></h1>
-{% for player in game.players%}
+{% for player in game.players %}
 <p>player {{player.userNumber}} : {{player.username}} <span class="affiche_color actual_position" style="background-color : {{player.color}}"></span></p>
 {% endfor %}
 {% if game.gameState %}
-<p>turn of player : {{game.turn}}</p>
+<p id="turn">turn of player : {{game.turn}}</p>
 <table id="board">
     {% define_variable as iLine %}
     {% for line in game.gameState %}
@@ -30,6 +30,11 @@
     {% endfor %}
 </table>
 <p id="error_message"></p>
+<p id="winner">
+    {% if game.winner %}
+        winner is player {{game.winner}}
+    {% endif %}
+</p>
 <div id="move_buttons">
     <button id="UP">UP</button>
     <button id="DOWN">DOWN</button>

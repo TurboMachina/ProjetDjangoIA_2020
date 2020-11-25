@@ -49,6 +49,7 @@ def resume_game(request, game_id) :
         game = business.resume_game(game_id, request.user.id)
     except NotPlayerError as error :
         return render(request, "game/errorPage.html", {"error_message" : error.message}, status=400)
+    print(game.winner)
     return render(request, "game/game.html", {"game" : game, "game_id" : game_id})
 
 @login_required(login_url="/connection/")

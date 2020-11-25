@@ -56,19 +56,27 @@ class User :
 class Game : 
     
     # Constructeur d'une game
-    def __init__(self, id, gameState=None, turn=0, players=[]):
+    def __init__(self, id, gameState=None, turn=0, winner=None, players=[]):
         self._id = id
         self._gameState = gameState
         self._players = players
         self._col_size = 8 # Initialiser la taille des column à 8
         self._cells_left = self._col_size**2 # Initialiser le nombre de case non prise a 64 ou col_size^2
         self._turn = turn # Initialiser le tour a 0
+        self._winner = winner
 
 
     # Getters utiles
     @property
     def id(self):
         return id
+
+    @property
+    def winner(self):
+        return self._winner
+    @winner.setter
+    def winner(self, winner) :
+        self._winner = winner
 
     @property
     def gameState(self):
@@ -125,27 +133,26 @@ class Game :
 
     # Passe au joueur suivant (UserNumber est soit 1 soit 2)
     def next_turn(self) :
-        self.turn = self.turn%2 + 1
+        self.turn = self.turn % 2 + 1
 
     # Savoir si la game est finie
-    def get_state1(self) :
-        return 0 in self.gameState
-    def get_state(self) : 
+    def game_over(self) :
+        for line in self.gameState :
+            if 0 in line :
+                return False
+        return True
+    def get_state1(self) : 
         return self.cells_left == 0
     
-    def get_winner(self, gameState):
-        nbOne = 0
-        nbTwo = 0
-        for x in range(len(self.gameState)):
-            for y in range(len(self.gameState)):
-                if(self.gameState[x][y] == "1"):
-                    nbOne = nbOne + 1
-                else :
-                    nbTwo = nbTwo + 1
+    def get_winner(self):
+        points = {"1" : 0, "2" : 0}
+        for line in self.gameState:
+            for column in line:
+                points[str(column)] = points[str(column)] + 1
 
-        if nbOne > nbTwo:
-            return self.userGames[0].user.username
-        return self.userGames[1].user.username
+        if points["1"] > points["2"]:
+            return 1
+        return 2
 
     def update_current_cells(self, x, y, turn) :
         self.gameState[x][y] = turn
