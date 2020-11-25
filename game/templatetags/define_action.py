@@ -22,6 +22,6 @@ def define_variable(var=0):
 @register.simple_tag
 def define_class(players, iLine, iColumn):
     for player in players :
-        if player.posX == int(iColumn) and player.posY == int(iLine) :
+        if player.posX == int(iLine) and player.posY == int(iColumn) :
             return "actual_position"
     return ""

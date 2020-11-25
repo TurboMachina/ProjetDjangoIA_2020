@@ -79,11 +79,16 @@ def index(request):
         return render(request, "game/index.html")
 
 
+
+def ComplexHandler(Obj):
+    if hasattr(Obj, 'to_json'):
+        return Obj.to_json()
+
 @login_required(login_url="/connection/")
 def apply_move(request, game_id) :
     try :
         game = business.apply_move(game_id, request.user, json.loads(request.body)["move"])
     except Error as error :
         return JsonResponse(data={"error_message" : error.message}, status=400)
-    return JsonResponse(game)
+    return JsonResponse(json.dumps(game, default=ComplexHandler), safe=False)
 

@@ -5,10 +5,10 @@ let errorMessage
 window.onload = function() {
   board = document.getElementById("board").children[0]
   errorMessage = document.getElementById("error_message")
-  document.getElementById("UP").addEventListener("click", movement({"move" : {"x" : 0, "y" : -1}}))
-  document.getElementById("LEFT").addEventListener("click", movement({"move" : {"x" : -1, "y" : 0}}))
-  document.getElementById("RIGHT").addEventListener("click", movement({"move" : {"x" : 1, "y" : 0}}))
-  document.getElementById("DOWN").addEventListener("click", movement({"move" : {"x" : 0, "y" : 1}}))
+  document.getElementById("UP").addEventListener("click", movement({"move" : {"x" : -1, "y" : 0}}))
+  document.getElementById("LEFT").addEventListener("click", movement({"move" : {"x" : 0, "y" : -1}}))
+  document.getElementById("RIGHT").addEventListener("click", movement({"move" : {"x" : 0, "y" : 1}}))
+  document.getElementById("DOWN").addEventListener("click", movement({"move" : {"x" : 1, "y" : 0}}))
   game_id = document.getElementById("game_id").innerText
 }
 function main(move) {
@@ -16,42 +16,38 @@ function main(move) {
   
   errorMessage.innerHTML = ""
 
-  promise.then(result => {
-    loadBoard(result)
-  }).catch(result => {
-    errorMessage.innerHTML = result.errorMessage
-  })
+  promise.then(result => loadBoard(JSON.parse(result)),
+    (result) => errorMessage.innerHTML = result.errorMessage)
 }
-
 function movement(move) {
   return function() {
     main(move)
   }
 }
 
-function loadBoard(response) {
+function loadBoard(result) {
   let iColumn;
   let iLine = 0;
+  result = JSON.parse(result)
 
-  color = ["black"]
-  for (player in response.players) color[player.playerNum] = player.color.toString(16);
+  colors = ["black"]
+  for (player of result._players) colors[player._userNumber] = player._color;
 
   for (line of board.children) {
     iColumn = 0
 
     for (column of line.children) {
-      
-      playerNum = response.gameState[iLine][iColumn]
-      column.textContent = playerNum
-      column.style.backgroundColor = color[playerNum]
+      userNumber = result._gameState[iLine][iColumn]
+      column.style.backgroundColor = colors[userNumber]
+      column.innerHTML = userNumber
       column.classList.remove("actual_position")
 
       iColumn++
     }
     iLine++
   }
-  for (player in response.players) {
-    board.children[player.posY].children[player.posX].classList.add("actual_position")
+  for (player of result._players) {
+    board.children[player._posX].children[player._posY].classList.add("actual_position")
   }
 }
 
@@ -65,7 +61,7 @@ function jsonRPC(url, data) {
     xhr.setRequestHeader("X-CSRFToken", csrftoken);
     xhr.onload = function () {
       if (this.status >= 200 && this.status < 300) {
-        resolve(JSON.parse(xhr.response));
+        resolve(xhr.response);
       } else {
         reject({
           status: this.status,

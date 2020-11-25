@@ -67,6 +67,10 @@ def apply_move(game_id, user, movement) :
     gameDTO.update_board(gameDTO.turn, {"posX" : newPosX, "posY" : newPosY})
     gameDTO.next_turn()
 
+    userGame.posUserX = newPosX
+    userGame.posUserY = newPosY
+    userGame.save()
+    
     game.gameState = gameDTO.gameState
     game.turn = gameDTO.turn
     game.save()
@@ -85,7 +89,7 @@ def resume_game(game_id, user_id) :
     gameDTO = mapGame(game)
     userGames = models.UserGame.objects.filter(game__id=game_id).all()
     gameDTO.players = mapMultipleUsers(userGames)
-
+    print(game.currentUser)
     return gameDTO
 
 

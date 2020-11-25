@@ -15,14 +15,14 @@ class IA(User):
         self._username = "IA"
         self._epsilon = epsilon
         self._learning_rate = learning_rate
-        self._qtable = []
+        self._qtable = self.initQTable()
         self.actions = [
             [-1, 0], # Up
             [1, 0], #Down
             [0, -1], # Left
             [0, 1] # Right
         ]
-    
+
     @property
     def epsilon(self):
         return self._epsilon
@@ -34,15 +34,15 @@ class IA(User):
     @property
     def qtable(self):
         return self._qtable
-    
+
     @property
-    def posX(self) : 
+    def posX(self) :
         return self.posX
-    
+
     @property
     def posY(self):
         return self.posY
-    
+
     @posX.setter
     def posX(self, posX):
         self._posX = posX
@@ -50,7 +50,13 @@ class IA(User):
     @posY.setter
     def posY(self, posY):
         self._posY = posY
-    
+
+    def initQTable(self):
+        QT = []
+        for _ in range(0, 64):
+            QT += [[0, 0, 0, 0]]
+        return QT
+
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
     def take_action(self, state, qtable, epsilon):
         if random.uniform(0, 1) < epsilon:
@@ -64,19 +70,19 @@ class IA(User):
         self.posY = self.posY + self.actions[action][0]
         self.posX = self.posX + self.actions[action][1]
 
-        return (self.posY, self.posX) , self.qtable[self._posY][self.posX] # retounr le state (unique) le reward associe 
-    
+        return (self.posY, self.posX) , self.qtable[self._posY][self.posX] # retounr le state (unique) le reward associe
+
 
     def play(self, game):
-        state = (self.posY, self.posX) # state actuel ?
+        state = (self.posY, self.posX) # state actuel ? # TODO State : pos + le board
 
-        action = self.take_action(state, self.qtable, self.epsilon) 
+        action = self.take_action(state, self.qtable, self.epsilon)
 
         nextState, reward = self.move(action)
 
         nextAction = self.take_action(nextState, self.qtable, 0.0) # La meilleure action
 
         self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
+        #TODO [state]
 
-        
 

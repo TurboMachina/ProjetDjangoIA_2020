@@ -12,6 +12,7 @@
 <p>player {{player.userNumber}} : {{player.username}} <span class="affiche_color actual_position" style="background-color : {{player.color}}"></span></p>
 {% endfor %}
 {% if game.gameState %}
+<p>turn of player : {{game.turn}}</p>
 <table id="board">
     {% define_variable as iLine %}
     {% for line in game.gameState %}

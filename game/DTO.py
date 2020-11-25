@@ -38,6 +38,8 @@ class User :
     def userNumber(self) :
         return self._userNumber
     
+    def to_json(self) :
+        return self.__dict__
 
 #_______________________________________________________________________________
 # CLASS GAME
@@ -52,7 +54,7 @@ class Game :
         self._players = players
         self._col_size = 8 # Initialiser la taille des column à 8
         self._cells_left = self._col_size**2 # Initialiser le nombre de case non prise a 64 ou col_size^2
-        self._turn = 0 # Initialiser le tour a 0
+        self._turn = turn # Initialiser le tour a 0
 
 
     # Getters utiles
@@ -93,7 +95,8 @@ class Game :
     def players(self, players):
         self._players = players
     
-    
+    def to_json(self) :
+        return self.__dict__
 
 # --------------------- METHODES GENERALEs AU JEU ---------------------
 
@@ -127,16 +130,14 @@ class Game :
         nbTwo = 0
         for x in range(len(self.gameState)):
             for y in range(len(self.gameState)):
-                # TODO : (faire un setter pour game state avec conditions ?) value gameState is unsubscriptable
                 if(self.gameState[x][y] == "1"):
                     nbOne = nbOne + 1
                 else :
                     nbTwo = nbTwo + 1
 
-        if nbOne > nbTwo :
-            # TODO : (faire un setter pour game state avec conditions ?) value userGame is unsubscriptable
-            return self.players[0].user.username
-        return self.players[1].user.username
+        if nbOne > nbTwo:
+            return self.userGames[0].user.username
+        return self.userGames[1].user.username
 
     def update_current_cells(self, x, y, turn) :
         self.gameState[x][y] = turn
@@ -166,31 +167,38 @@ class Game :
         # fonction qui vérifie et update un bloc de cases capturées
         # x et y = position prise par le joueur UserNumber
     def lock_won_block(self, boards, x, y, userNumber):
-        lookupTable = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        lookup_table = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         opponent = userNumber % 2 + 1
-        directionnalCells = [[], [], [], []]
+        directionnal_cells = [[], [], [], []]
         direction = 0
-        for look in lookupTable:
+        for look in lookup_table:
             nextx = x + look[0]
             nexty = y + look[1]
-            if (not self.is_out_of_limits(nextx, nexty)) and boards[nextx][nexty] != 0:
-                result = self.find_won_block(boards, x, y, lookupTable, userNumber, opponent, directionnalCells[direction])
-                if not result:
-                    self.fillZone(boards, userNumber, directionnalCells[direction])
+            if (not self.is_out_of_limits(nextx, nexty)) and boards[nextx][nexty] == 0:
+                self.find_won_block(boards, nextx, nexty, lookup_table, userNumber, opponent, directionnal_cells[direction])
+                self.fillZone(boards, userNumber, directionnal_cells[direction])
+                direction += 1
 
     def find_won_block(self, boards, x, y, lookupTable, userNumber, opponent, cellsVisited):
-        cellsVisited.append((x, y))
         for look in lookupTable:
             nextx = x + look[0]
             nexty = y + look[1]
-            if self.is_out_of_limits(nextx, nexty) or (nextx, nexty) in cellsVisited:  # on continue a chercher mais on arrive a un bord ou déjà fait
-                return False
+
+            if self.is_out_of_limits(nextx, nexty) or ((nextx, nexty, False) in cellsVisited or (nextx, nexty, True) in cellsVisited) or boards[nextx][nexty] == userNumber:  # on continue a chercher mais on arrive a un bord ou déjà fait
+                return None
+
             if boards[nextx][nexty] == opponent:  # pas un enclos
-                return True
-            else:
-                result = self.find_won_block(boards, nextx, nexty, lookupTable, userNumber, opponent, cellsVisited)  # on continue a chercher
+                cellsVisited.append((x, y, False))
+                return None
+
+            cellsVisited.append((x, y, True))
+            self.find_won_block(boards, nextx, nexty, lookupTable, userNumber, opponent, cellsVisited)  # on continue a chercher
 
     def fillZone(self, boards, userNumber, cellVisited):
+        to_be_filled = True
         for cell in cellVisited:
-            if cell == True:
-                boards[cell[0], cell[1]] = userNumber
+            if not cell[2]:
+                to_be_filled = False
+        if to_be_filled:
+            for cell in cellVisited:
+                boards[cell[0]][cell[1]] = userNumber
