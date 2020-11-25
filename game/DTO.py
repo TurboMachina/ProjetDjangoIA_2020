@@ -34,6 +34,14 @@ class User :
     def posY(self):
         return self._posY
 
+    @posX.setter
+    def posX(self, posX):
+        self._posX = posX
+
+    @posY.setter
+    def posY(self, posY):
+        self._posY = posY
+
     @property
     def userNumber(self):
         return self._userNumber
@@ -139,8 +147,9 @@ class Game :
                 return True
         return False
 
-        # fonction qui vérifie et update un bloc de cases capturées
-        # x et y = position prise par le joueur UserNumber
+    # fonction qui vérifie et update un bloc de cases capturées
+    # x et y = position prise par le joueur UserNumber
+    # les coordonées utilisées par le système de lock_zone ne suivent pas les conventions du projet
     def lock_won_block(self, boards, x, y, userNumber):
         lookup_table = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         opponent = userNumber % 2 + 1
