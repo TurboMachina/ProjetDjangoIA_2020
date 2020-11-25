@@ -68,15 +68,20 @@ class IA(User):
         self.posY = self.posY + self.actions[action][0]
         self.posX = self.posX + self.actions[action][1]
 
-        r1 = [x for x in y for y in self.game.gameState]
+        p1 = 0
+        p2 = 0
+        for line in self.game.gameState:
+            p1 += line.count(1)
+            p2 += line.count(2)
 
+        # TODO Game : apply_move
 
-        reward = np.count_nonzero(self.game.gameState == 1) - np.count_nonzero(self.game.gameState == 2)
+        reward = p1 - p2
 
-        return self.posY + self.posX*8, reward # retounr le state (unique) le reward associe
+        return self.posY+1 + (self.posX+1)*8, reward # retoune le state (unique) le reward associe
 
     def play(self):
-        state = self.posY + self.posX*8 # position dans le board
+        state = self.posY+1 + (self.posX+1)*8 # position dans le board
 
         action = self.take_action(state, self.game, self.qtable, self.epsilon)
 

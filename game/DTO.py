@@ -147,8 +147,9 @@ class Game :
                 return True
         return False
 
-        # fonction qui vérifie et update un bloc de cases capturées
-        # x et y = position prise par le joueur UserNumber
+    # fonction qui vérifie et update un bloc de cases capturées
+    # x et y = position prise par le joueur UserNumber
+    # les coordonées utilisées par le système de lock_zone ne suivent pas les conventions du projet
     def lock_won_block(self, boards, x, y, userNumber):
         lookup_table = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         opponent = userNumber % 2 + 1
@@ -169,14 +170,12 @@ class Game :
 
             cellsVisited.append((x, y, True))
 
-            if self.is_out_of_limits(nextx, nexty) or ((nextx, nexty, False) in cellsVisited or (nextx, nexty, True) in cellsVisited) or boards[nextx][nexty] == userNumber:  # on continue a chercher mais on arrive a un bord ou déjà fait
-                return None
+            if not self.is_out_of_limits(nextx, nexty) and (nextx, nexty, False) not in cellsVisited and (nextx, nexty, True) not in cellsVisited and boards[nextx][nexty] != userNumber:  # on continue a chercher mais on arrive a un bord ou déjà fait
+                if boards[nextx][nexty] == opponent:  # pas un enclos
+                    cellsVisited.append((x, y, False))
+                    return None
 
-            if boards[nextx][nexty] == opponent:  # pas un enclos
-                cellsVisited.append((x, y, False))
-                return None
-
-            self.find_won_block(boards, nextx, nexty, lookupTable, userNumber, opponent, cellsVisited)  # on continue a chercher
+                self.find_won_block(boards, nextx, nexty, lookupTable, userNumber, opponent,cellsVisited)  # on continue a chercher
 
     def fillZone(self, boards, userNumber, cellVisited):
         to_be_filled = True
