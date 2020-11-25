@@ -16,6 +16,8 @@ class IA(User):
         self._epsilon = epsilon
         self._learning_rate = learning_rate
         self._qtable = self.initQTable()
+        self._game = self.initGame()
+        self._history = []
         self.actions = [
             [-1, 0], # Up
             [1, 0], #Down
@@ -36,20 +38,8 @@ class IA(User):
         return self._qtable
 
     @property
-    def posX(self) :
-        return self.posX
-
-    @property
-    def posY(self):
-        return self.posY
-
-    @posX.setter
-    def posX(self, posX):
-        self._posX = posX
-
-    @posY.setter
-    def posY(self, posY):
-        self._posY = posY
+    def game(self):
+        return self._game
 
     def initQTable(self):
         QT = []
@@ -57,8 +47,16 @@ class IA(User):
             QT += [[0, 0, 0, 0]]
         return QT
 
+    def initGame(self):
+        game = Game(0, [], [1, 2])
+        game.init_board()
+        return game
+
+    def resetGame(self, game):
+        game.init_board()
+
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
-    def take_action(self, state, qtable, epsilon):
+    def take_action(self, state, game, qtable, epsilon):
         if random.uniform(0, 1) < epsilon:
             action = randint(0, 3) # decouverte, random entre les 4 actions possible
         else:
@@ -70,19 +68,23 @@ class IA(User):
         self.posY = self.posY + self.actions[action][0]
         self.posX = self.posX + self.actions[action][1]
 
-        return (self.posY, self.posX) , self.qtable[self._posY][self.posX] # retounr le state (unique) le reward associe
+        r1 = [x for x in y for y in self.game.gameState]
 
 
-    def play(self, game):
-        state = (self.posY, self.posX) # state actuel ? # TODO State : pos + le board
+        reward = np.count_nonzero(self.game.gameState == 1) - np.count_nonzero(self.game.gameState == 2)
 
-        action = self.take_action(state, self.qtable, self.epsilon)
+        return self.posY + self.posX*8, reward # retounr le state (unique) le reward associe
+
+    def play(self):
+        state = self.posY + self.posX*8 # position dans le board
+
+        action = self.take_action(state, self.game, self.qtable, self.epsilon)
 
         nextState, reward = self.move(action)
 
-        nextAction = self.take_action(nextState, self.qtable, 0.0) # La meilleure action
+        nextAction = self.take_action(nextState, self.game, self.qtable, 0.0) # La meilleure action
 
         self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
-        #TODO [state]
 
-
+    def train(self):
+        pass

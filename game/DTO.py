@@ -34,6 +34,14 @@ class User :
     def posY(self):
         return self._posY
 
+    @posX.setter
+    def posX(self, posX):
+        self._posX = posX
+
+    @posY.setter
+    def posY(self, posY):
+        self._posY = posY
+
     @property
     def userNumber(self):
         return self._userNumber
