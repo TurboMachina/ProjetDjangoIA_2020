@@ -19,6 +19,12 @@ Notre projet est découpé en deux applications, la connection et le jeu. <br>
 ![Screenshot](decoupe.png)
 
 
+### Notre IA
+
+Nous utilisons la Q function pour notre jeu. <br>
+(Voir rapport sur notre IA)
+
+
 Notre jeu est encore en cours de travail. 
 
 ---
