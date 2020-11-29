@@ -153,7 +153,7 @@ def join_game(game_id, user, form) :
 # Entrainement des IA, (IA contre IA)
 def train(self, ia1, ia2, number_games) :
     players = [ia1, ia2]
-    game = Game(players) # ajout params en fonction du code de jordan(TODO)
+    game = Game(players) # ajout params 
 
     for game in range(number_games) : 
         play(game)
