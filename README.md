@@ -14,7 +14,7 @@ Notre projet est découpé en deux applications, la connection et le jeu. <br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Le DTO qui permet de créer les classes orienté objet utilisé dans le business <br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Le business que nous utilisons pour faire toute la logique principale du jeu <br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Les views qui permettent de gérer les templates <br>
-    L'IA, notre intélligence artificielle <br>
+    Et l'IA, notre intélligence artificielle <br>
 
 ![Screenshot](decoupe.png)
 
