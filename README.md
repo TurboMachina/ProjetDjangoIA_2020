@@ -9,11 +9,11 @@ Le but est simple, prennez un maximum de cases possible en jouant contre un ami 
 Notre projet est découpé en deux applications, la connection et le jeu. <br>
 - La partie connection reprend le model et les vues et les templates utilent à la connection <br>
 - La partie jeu est découpé en plusieurs sous parties : <br>
-        Le model qui permet de faire le lien avec la base de donnée <br>
-        Le mapper qui fait le lien entre les models et le DTO <br>
-        Le DTO qui permet de faire de créer les classes orienté objet utilisé dans le business <br>
-        Le business que nous utilisons pour faire toute la logique principale du jeu <br>
-        Les views qui permettent de gérer les templates <br>
+        <dd> Le model qui permet de faire le lien avec la base de donnée <br>
+        <dd> Le mapper qui fait le lien entre les models et le DTO <br>
+        <dd> Le DTO qui permet de faire de créer les classes orienté objet utilisé dans le business <br>
+        <dd> Le business que nous utilisons pour faire toute la logique principale du jeu <br>
+        <dd> Les views qui permettent de gérer les templates <br>
     L'IA, notre intélligence artificielle <br>
 
 
