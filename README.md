@@ -18,7 +18,7 @@ Notre projet est découpé en deux applications, la connection et le jeu. <br>
 
 Notre jeu est encore en cours de travail. 
 
---
+---
 
 Bien à vous,  <br>
 
