@@ -16,6 +16,7 @@ Notre projet est découpé en deux applications, la connection et le jeu. <br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Les views qui permettent de gérer les templates <br>
     L'IA, notre intélligence artificielle <br>
 
+--- 
 
 Bien à vous,  <br>
 

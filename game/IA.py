@@ -91,7 +91,3 @@ class IA(User):
 
         self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
 
-
-# Train l'IA, enregistrer historique et puis update q table ?
-# Lors de lancement d'une game Faire une différence entre IA et joueur (logique de jeu) 
-# Enregistrement de l'IA dans la BD
