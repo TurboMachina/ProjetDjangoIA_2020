@@ -1,6 +1,7 @@
 # Bienvenue sur notre projet d'intélligence artificielle
 
 Ce projet conciste en la création d'un jeu de plateau à l'aide du framework Django. Notre jeu est codé en Pyhton, Javascript, HTML et CSS. 
+
 Le but est simple, prennez un maximum de cases possible en jouant contre un ami ou une IA! 
 
 ### Découpe de notre projet
