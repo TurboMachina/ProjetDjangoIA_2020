@@ -10,11 +10,12 @@ from game.DTO import User
 
 class IA(User):
 
-    def __init__(self, user_id, username, color, userNumber, posX, posY, epsilon=0.90, learning_rate=0.1): # IA est un joueur, héritage
+    def __init__(self, user_id, username, color, userNumber, posX, posY, epsilon=0.1, learning_rate=0.5, gama=0.9): # IA est un joueur, héritage
         User.__init__(self, user_id, username, color, userNumber, posX, posY)
         self._username = "IA"
         self._epsilon = epsilon
         self._learning_rate = learning_rate
+        self._gama = gama
         self._qtable = self.initQTable()
         self._game = self.initGame()
         self._history = []
@@ -28,6 +29,10 @@ class IA(User):
     @property
     def epsilon(self):
         return self._epsilon
+    
+    @property
+    def gama(self):
+        return self._gama
 
     @property
     def learning_rate(self):
@@ -81,18 +86,18 @@ class IA(User):
         return self.posY+1 + (self.posX+1)*8, reward # retoune le state (unique) le reward associe
 
     def play(self):
-        
+
         # TODO State = positions des deux joueurs + la grille + le tour
 
         state = self.posY+1 + (self.posX+1)*8 # position dans le board
 
         action = self.take_action(state, self.game, self.qtable, self.epsilon)
 
-        #TODO faire jouer le joueur entre state et next state
+        # TODO faire jouer le joueur entre state et next state
 
         nextState, reward = self.move(action)
 
         nextAction = self.take_action(nextState, self.game, self.qtable, 0.0) # La meilleure action
 
-        self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
+        self.qtable[state][action] = self.qtable[state][action] + self.gama * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
 
