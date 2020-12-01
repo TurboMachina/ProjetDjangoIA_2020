@@ -81,9 +81,14 @@ class IA(User):
         return self.posY+1 + (self.posX+1)*8, reward # retoune le state (unique) le reward associe
 
     def play(self):
+        
+        # TODO State = positions des deux joueurs + la grille + le tour
+
         state = self.posY+1 + (self.posX+1)*8 # position dans le board
 
         action = self.take_action(state, self.game, self.qtable, self.epsilon)
+
+        #TODO faire jouer le joueur entre state et next state
 
         nextState, reward = self.move(action)
 
