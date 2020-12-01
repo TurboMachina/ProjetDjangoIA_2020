@@ -6,8 +6,6 @@ import game.models as models
 from game.error import *
 from game.mapper import *
 
-
-# Joueur random pour debuter game
 def random_user_number() : 
     return random.randint(1,2)
 

@@ -18,7 +18,6 @@ class IA(User):
         self._gama = gama
         self._qtable = self.initQTable()
         self._game = self.initGame()
-        self._history = []
         self.actions = [
             [-1, 0], # Up
             [1, 0], #Down
@@ -69,6 +68,9 @@ class IA(User):
         return action
 
 
+
+    # TODO même méthode existe deja dans business, pas de duplication, utiliser une seule méthode et l'adapter pour qu'elle renvoit le reward
+
     def move(self, action):
         self.posY = self.posY + self.actions[action][0]
         self.posX = self.posX + self.actions[action][1]
@@ -79,15 +81,13 @@ class IA(User):
             p1 += line.count(1)
             p2 += line.count(2)
 
-        # TODO Game : apply_move
-
         reward = p1 - p2
 
         return self.posY+1 + (self.posX+1)*8, reward # retoune le state (unique) le reward associe
 
     def play(self):
 
-        # TODO State = positions des deux joueurs + la grille + le tour
+        # TODO State = positions des deux joueurs + la grille 
 
         state = self.posY+1 + (self.posX+1)*8 # position dans le board
 
@@ -100,4 +100,11 @@ class IA(User):
         nextAction = self.take_action(nextState, self.game, self.qtable, 0.0) # La meilleure action
 
         self.qtable[state][action] = self.qtable[state][action] + self.gama * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
+
+
+
+    # TODO Modifier la BD pour qtable
+    # TODO changer le business pour que l'IA s'entraine sur toutes les games
+    # TODO faire une fonctions en plus pour entrainer IA
+    # TODO Adapter views / templates
 
