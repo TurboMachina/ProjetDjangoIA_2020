@@ -1,6 +1,3 @@
-#_______________________________________________________________________________
-# IA
-#_______________________________________________________________________________
 
 import numpy as np
 from random import randint
@@ -8,22 +5,46 @@ import random
 from game.DTO import Game
 from game.DTO import User
 
-class IA(User):
 
-    def __init__(self, user_id, username, color, userNumber, posX, posY, epsilon=0.1, learning_rate=0.5, gama=0.9): # IA est un joueur, héritage
-        User.__init__(self, user_id, username, color, userNumber, posX, posY)
-        self._username = "IA"
-        self._epsilon = epsilon
-        self._learning_rate = learning_rate
-        self._gama = gama
-        self._qtable = self.initQTable()
-        self._game = self.initGame()
-        self.actions = [
+#_______________________________________________________________________________
+# CLASS STATE
+#_______________________________________________________________________________
+
+class State : 
+    def __init__(self, idState, posXJ1, posXJ2, posYJ1, posYJ2, gameState) : 
+        self._idState = idState
+        self._posXJ1 = posXJ1
+        self._posXJ2 = posXJ2
+        self._posYJ1 = posYJ1
+        self._posYJ2 = posYJ2
+        self._gameState = gameState
+        self.moves = [
             [-1, 0], # Up
             [1, 0], #Down
             [0, -1], # Left
             [0, 1] # Right
         ]
+        self.esperance = 
+    
+    @property
+    def state(self):
+        pass
+
+#_______________________________________________________________________________
+# CLASS IA
+#_______________________________________________________________________________
+
+
+class IA :
+    def __init__(self, idIa, epsilon=0.1, learning_rate=0.5, gama=0.9, userGame, states=[]) : 
+        self._idIa = idIa
+        self._epsilon = epsilon
+        self._learning_rate = learning_rate
+        self._gama = gama
+        self._states = states
+        self._userGame = userGame
+        self._qtable = self.initQTable()
+        #self._game = self.initGame()
 
     @property
     def epsilon(self):
@@ -56,8 +77,9 @@ class IA(User):
         game.init_board()
         return game
 
-    def resetGame(self, game):
-        game.init_board()
+    #def resetGame(self, game):
+        #game.init_board()
+
 
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
     def take_action(self, state, game, qtable, epsilon):
@@ -85,6 +107,7 @@ class IA(User):
 
         return self.posY+1 + (self.posX+1)*8, reward # retoune le state (unique) le reward associe
 
+
     def play(self):
 
         # TODO State = positions des deux joueurs + la grille 
@@ -103,8 +126,10 @@ class IA(User):
 
 
 
+
     # TODO Modifier la BD pour qtable
     # TODO changer le business pour que l'IA s'entraine sur toutes les games
-    # TODO faire une fonctions en plus pour entrainer IA
+    # TODO faire une fonction  pour entrainer IA
+    # TODO modifier toute la logique de l'IA
     # TODO Adapter views / templates
 
