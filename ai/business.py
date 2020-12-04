@@ -1,4 +1,3 @@
-
 import numpy as np
 from random import randint
 import random
@@ -111,23 +110,28 @@ class IA :
     def play(self):
 
         # TODO State = positions des deux joueurs + la grille 
+        # state = self.posY+1 + (self.posX+1)*8 # position dans le board
 
-        state = self.posY+1 + (self.posX+1)*8 # position dans le board
+        try : 
+            state = State.objects.get(id_state = , posXUser1 = , posYUser1 = , posXUser2 = , posYUser2 = , game_sate = )
+        except SomeModel.DoesNotExist :
+            state = None
+
+        if state = None :
+            state = State.objects.create(id_state = , posXUser1 = , posYUser1 = , posXUser2 = , posYUser2 = , game_sate = )
 
         action = self.take_action(state, self.game, self.qtable, self.epsilon)
 
-        # TODO faire jouer le joueur entre state et next state
 
         nextState, reward = self.move(action)
 
-        nextAction = self.take_action(nextState, self.game, self.qtable, 0.0) # La meilleure action
+        nextAction = self.take_action(nextState, self.game, self.qtable, 0.0) 
 
         self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.gama * self.qtable[nextState][nextAction] - self.qtable[state][action])
 
 
 
 
-    # TODO Modifier la BD pour qtable
     # TODO changer le business pour que l'IA s'entraine sur toutes les games
     # TODO faire une fonction  pour entrainer IA
     # TODO modifier toute la logique de l'IA
