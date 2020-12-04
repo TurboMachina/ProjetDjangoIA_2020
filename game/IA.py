@@ -122,7 +122,7 @@ class IA :
 
         nextAction = self.take_action(nextState, self.game, self.qtable, 0.0) # La meilleure action
 
-        self.qtable[state][action] = self.qtable[state][action] + self.gama * (reward + self.epsilon * self.qtable[nextState][nextAction] - self.qtable[state][action])
+        self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.gama * self.qtable[nextState][nextAction] - self.qtable[state][action])
 
 
 
