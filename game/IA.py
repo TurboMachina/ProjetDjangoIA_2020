@@ -10,8 +10,8 @@ from game.DTO import User
 
 class IA(User):
 
-    def __init__(self, user_id, username, color, userNumber, posX, posY, epsilon=0.90, learning_rate=0.1): # IA est un joueur, héritage
-        User.__init__(self, user_id, username, color, userNumber, posX, posY)
+    def __init__(self, user_id, userNumber, posX, posY, color=105105105, username="AI", epsilon=0.90, learning_rate=0.1): # IA est un joueur, héritage
+        super.__init__(self, user_id, username, color, userNumber, posX, posY)
         self._username = "IA"
         self._epsilon = epsilon
         self._learning_rate = learning_rate
@@ -19,10 +19,10 @@ class IA(User):
         self._game = self.initGame()
         self._history = []
         self.actions = [
-            [-1, 0], # Up
+            [-1, 0], #Up
             [1, 0], #Down
-            [0, -1], # Left
-            [0, 1] # Right
+            [0, -1], #Left
+            [0, 1] #Right
         ]
 
     @property

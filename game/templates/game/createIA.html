@@ -1,0 +1,11 @@
+{% extends 'game/base.html' %}
+{% load static %}
+{% block content %}
+<h1>create IA</h1>
+<form method="POST" action="/game/createIA/">
+    {% csrf_token %}
+    {{ form }}
+    <div id="error_message">{{error_message}}</div>
+    <p><button class="button" type="submit">send</button></p>
+</form>
+{% endblock content %}

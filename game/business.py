@@ -5,6 +5,7 @@ import random
 import game.models as models
 from game.error import *
 from game.mapper import *
+from game.IA import IA
 
 
 # Joueur random pour debuter game
@@ -41,9 +42,17 @@ def start_game(game_id, user) :
             assign_pos(userGame, 0)
         elif userGame.userNumber == 2 :
             assign_pos(userGame, gameDTO.col_size - 1)
+        if userGame.ia and userGame.userNumber == game.currentUser :
+            ia_plays(userGame, mapIA(userGame), game, gameDTO)
         userGame.save()
 
     return game
+
+def ia_plays(userGame, iaDTO, game, gameDTO) :
+    userGame.move()
+    if game.game_over() :
+        gameDTO.winner = gameDTO.get_winner()
+    gameDTO.next_turn() # TODO recup le move et mettre à jour le userGame
 
 
 def apply_move(game_id, user, movement) :
@@ -70,6 +79,10 @@ def apply_move(game_id, user, movement) :
         if gameDTO.game_over() :
             gameDTO.winner = gameDTO.get_winner()
         gameDTO.next_turn()
+        
+        userGame2 = models.UserGame.objects.filter(game__id=game.id).exclude(userId__id=user.id).first()
+        if userGame2.ia and not gameDTO.game_over():
+            ia_plays(userGame2, mapIA(userGame2), game, gameDTO) #TODO à changer pour s'adapté à l'ia
 
         userGame.posUserX = newPosX
         userGame.posUserY = newPosY
@@ -80,8 +93,8 @@ def apply_move(game_id, user, movement) :
         game.winner = gameDTO.winner
         game.save()
 
-    userGames = models.UserGame.objects.filter(game__id=game.id)
-    gameDTO.players = mapMultipleUsers(userGames)
+    gameDTO.players = mapMultipleUsers([userGame, userGame2])
+    
 
     return gameDTO
 
@@ -95,11 +108,6 @@ def resume_game(game_id, user_id) :
     userGames = models.UserGame.objects.filter(game__id=game_id).all()
     gameDTO.players = mapMultipleUsers(userGames)
     return gameDTO
-
-
-def launch_game():
-    player1 = models.User(1, "aherrent", "abcd")
-    player2 = models.User(2, "abaert", "password")
 
 
 def my_games(user) :
@@ -135,7 +143,7 @@ def join_game(game_id, user, form) :
     if user in players :
         raise AlreadyPlayerError()
 
-    if len(players) == 2 :
+    if len(players) == 2 or (players and game.ias) :
         raise AlreadyTwoPlayerError()
     
     if not form.is_valid() :
@@ -149,14 +157,43 @@ def join_game(game_id, user, form) :
     
     models.UserGame.objects.create(userId=user, game=game, color=hex_color, userNumber=2)
 
-"""
+
 # Entrainement des IA, (IA contre IA)
-def train(self, ia1, ia2, number_games) :
-    players = [ia1, ia2]
+def train(self, ia_id, number_games) :
+    ia = models.IA.objects.get(id=ia_id)
+    players = list()
+    posX = 0
+    posY = 0
+    for i in range(1, 3) :
+        if i == 2 :
+            posX = 7
+            posY = 7
+
+        players.append(IA(0, i, posX, posY, epsilon=ia.epsilonGreedy, learning_rate=ia.learningRate))
+
     game = Game(players) # ajout params en fonction du code de jordan(TODO)
 
     for game in range(number_games) : 
-        play(game)
-    
+        game.init_board()
+        while not game.game_over() :
+            players[game.turn - 1].play(game)
+            game.next_turn()
+        
+    ia.qtable = players[1].qTable
+    ia.save()
 
-"""
+
+def create_ia(form) :
+    if not form.is_valid() :
+        pass
+    epsilon = form.cleaned_data["epsilonGreedy"]
+    learningRate = form.cleaned_data["learningRate"]
+
+    ia = models.IA.objects.create(epsilonGreedy=epsilon, learningRate=learningRate)
+
+    return ia 
+
+
+def list_ia_trainable() :
+    ia_list = models.IA.objects.filter(qTable__isnull=True)
+    return ia_list
