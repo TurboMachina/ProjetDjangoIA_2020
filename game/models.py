@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
+from ai.models import Esperance
 
 class IA(models.Model) :
     qTable = ArrayField(ArrayField(models.FloatField(null=True, blank=True), null=True, blank=True), null=True, blank=True)
@@ -21,9 +22,10 @@ class Game(models.Model) :
 
 class UserGame(models.Model) : 
     userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    game = models.ForeignKey(Game, on_delete = models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     ia = models.ForeignKey(IA, on_delete=models.CASCADE, null=True, blank=True)
     color = models.IntegerField()
     userNumber = models.IntegerField()
     posUserX = models.IntegerField(null=True, blank=True)
     posUserY = models.IntegerField(null=True, blank=True)
+    movePrecedent = models.ForeignKey(Esperance, on_delete=models.DO_NOTHING, related_name="UserGames")

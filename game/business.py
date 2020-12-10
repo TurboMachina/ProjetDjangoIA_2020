@@ -7,8 +7,6 @@ from game.error import *
 from game.mapper import *
 from game.IA import IA
 
-
-# Joueur random pour debuter game
 def random_user_number() : 
     return random.randint(1,2)
 
@@ -43,7 +41,7 @@ def start_game(game_id, user) :
         elif userGame.userNumber == 2 :
             assign_pos(userGame, gameDTO.col_size - 1)
         if userGame.ia and userGame.userNumber == game.currentUser :
-            ia_plays(userGame, mapIA(userGame), game, gameDTO)
+            ia_plays(userGame, mapIA(userGame), game, gameDTO) # TODO modifier appel de l'ia
         userGame.save()
 
     return game
@@ -159,6 +157,7 @@ def join_game(game_id, user, form) :
 
 
 # Entrainement des IA, (IA contre IA)
+"""
 def train(self, ia_id, number_games) :
     ia = models.IA.objects.get(id=ia_id)
     players = list()
@@ -172,6 +171,10 @@ def train(self, ia_id, number_games) :
         players.append(IA(0, i, posX, posY, epsilon=ia.epsilonGreedy, learning_rate=ia.learningRate))
 
     game = Game(players) # ajout params en fonction du code de jordan(TODO)
+"""
+def train(self, ia1, ia2, number_games) :
+    players = [ia1, ia2]
+    game = Game(players) # ajout params 
 
     for game in range(number_games) : 
         game.init_board()
