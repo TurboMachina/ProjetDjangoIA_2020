@@ -43,8 +43,6 @@ class IA :
         self._gama = gama
         self._states = states
         self._userGame = userGame
-        self._qtable = self.initQTable()
-        #self._game = self.initGame()
 
     @property
     def epsilon(self):
@@ -57,10 +55,6 @@ class IA :
     @property
     def learning_rate(self):
         return self._learning_rate
-
-    @property
-    def qtable(self):
-        return self._qtable
 
     @property
     def game(self):
@@ -95,11 +89,18 @@ class IA :
 
 
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
-    def take_action(self, state, game, qtable, epsilon):
+    def take_action(self, state, game, epsilon):
+        moves = [[-1, 0], # Up
+                [1, 0], #Down
+                [0, -1], #Left
+                [0, 1]] #Right
+
         if random.uniform(0, 1) < epsilon:
-            action = randint(0, 3) # decouverte, random entre les 4 actions possible
+            action = moves(randint(0, 3))
         else:
-            action = np.argmax(qtable[state]) # prendre le meilleur mouvement possible dans la table Q en fonction du state
+            bestEsperance = Esperance.objects.all().aggregate(Max('esperance')) # Pas sur que ca fonctionne ?
+            action = Move.objects.get(id = bestEsperance.move)
+            #action = np.argmax(qtable[state]) prendre le meilleur mouvement possible dans la table Q en fonction du state
         return action
 
     def reward(self, gameState) : 
@@ -109,9 +110,6 @@ class IA :
         return nbCellsPlayer1 - nbCellsPlayer2
 
     def play(self, stateId, posXUser1, posYUser1, posXUser2, posYUser2, game_sate):
-        # state = self.posY+1 + (self.posX+1)*8 # position dans le board
-        #nextState, reward = self.move(action)
-
         try : 
             state = State.objects.get(id = stateId, posXUser1 = posXUser1, posYUser1 = posYUser1, posXUser2 = posXUser2, posYUser2 = posYUser2, game_sate = game_sate)
         except SomeModel.DoesNotExist :
@@ -120,16 +118,34 @@ class IA :
         if state = None :
             state = State.objects.create(id = stateId, posXUser1 = posXUser1, posYUser1 = posYUser1, posXUser2 = posXUser2, posYUser2 = posYUser2, game_sate = game_sate)
 
-        action = self.take_action(state, self.game, self.qtable, self.epsilon)
+        action = self.take_action(state, self.game, self.epsilon)
 
         try : 
-            nextState = UserGame.objects.get(id= )
+            nextState = UserGame.objects.get(id=)
         except SomeModel.DoesNotExist :
             nextState = None
 
         reward = reward(game_state)
         
-        nextAction = self.take_action(nextState, self.game, self.qtable, 0.0) 
+        nextAction = self.take_action(nextState, self.game, 0.0) 
 
-        self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.gama * self.qtable[nextState][nextAction] - self.qtable[state][action])
+        try : 
+            esperanceBD = Esperance.objects.get(fk = state, fk = action)
+        except SomeModel.DoesNotExist :
+            esperanceBD = None
+
+        esperance = Esperance.objects.get(fk = state, fk = action) + self.learning_rate * (reward + self.gama * Esperance.objects.get(fk = nextState, fk = nextAction) - Esperance.objects.get(fk = state, fk = action))
+
+        if esperanceBD = None :
+            esperanceBD = Esperance.objects.create(fk = state, fk = action, esperance = esperance)
+        else : 
+            #esperanceBD = modifier esperance dans la BD TODO
+
+
+
+
+
+        # state = self.posY+1 + (self.posX+1)*8 # position dans le board
+        # nextState, reward = self.move(action)
+        #self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.gama * self.qtable[nextState][nextAction] - self.qtable[state][action])
 
