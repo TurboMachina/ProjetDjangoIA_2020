@@ -6,6 +6,7 @@ from game.DTO import User
 from game.models import UserGame
 
 
+ """
 #_______________________________________________________________________________
 # CLASS STATE
 #_______________________________________________________________________________
@@ -60,7 +61,6 @@ class IA :
     def game(self):
         return self._game
 
-   """
     def initQTable(self):
         QT = []
         for _ in range(0, 64):
