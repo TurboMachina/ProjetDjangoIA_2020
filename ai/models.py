@@ -8,6 +8,7 @@ class AI(models.Model) :
     gama = models.FloatField(min=0, max=1)
     states = models.ManyToManyField(State) 
 
+
 class State(models.Model) : 
     posXUser1 = models.IntegerField()
     posYUser1 = models.IntegerField()
@@ -21,8 +22,6 @@ class Esperance(models.Model) :
     state = models.ForeignKey(State, on_delete = models.CASCADE)
     move = models.ForeignKey(Move, on_delete=models.CASCADE)
     esperance = models.FloatField(min=0, max=1)
-
-
 
 
 class Move(models.Model) : 

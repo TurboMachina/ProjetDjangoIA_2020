@@ -3,6 +3,7 @@ from random import randint
 import random
 from game.DTO import Game
 from game.DTO import User
+from game.models import UserGame
 
 
 #_______________________________________________________________________________
@@ -65,6 +66,7 @@ class IA :
     def game(self):
         return self._game
 
+   """
     def initQTable(self):
         QT = []
         for _ in range(0, 64):
@@ -75,22 +77,6 @@ class IA :
         game = Game(0, [], [1, 2])
         game.init_board()
         return game
-
-    #def resetGame(self, game):
-        #game.init_board()
-
-
-    # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
-    def take_action(self, state, game, qtable, epsilon):
-        if random.uniform(0, 1) < epsilon:
-            action = randint(0, 3) # decouverte, random entre les 4 actions possible
-        else:
-            action = np.argmax(qtable[state]) # prendre le meilleur mouvement possible dans la table Q en fonction du state
-        return action
-
-
-
-    # TODO même méthode existe deja dans business, pas de duplication, utiliser une seule méthode et l'adapter pour qu'elle renvoit le reward
 
     def move(self, action):
         self.posY = self.posY + self.actions[action][0]
@@ -105,35 +91,45 @@ class IA :
         reward = p1 - p2
 
         return self.posY+1 + (self.posX+1)*8, reward # retoune le state (unique) le reward associe
+    """
 
 
-    def play(self):
+    # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
+    def take_action(self, state, game, qtable, epsilon):
+        if random.uniform(0, 1) < epsilon:
+            action = randint(0, 3) # decouverte, random entre les 4 actions possible
+        else:
+            action = np.argmax(qtable[state]) # prendre le meilleur mouvement possible dans la table Q en fonction du state
+        return action
 
-        # TODO State = positions des deux joueurs + la grille 
+    def reward(self, gameState) : 
+        for line in gameState:
+            nbCellsPlayer1 += line.count(1)
+            nbCellsPlayer2 += line.count(2)
+        return nbCellsPlayer1 - nbCellsPlayer2
+
+    def play(self, stateId, posXUser1, posYUser1, posXUser2, posYUser2, game_sate):
         # state = self.posY+1 + (self.posX+1)*8 # position dans le board
+        #nextState, reward = self.move(action)
 
         try : 
-            state = State.objects.get(id = , posXUser1 = , posYUser1 = , posXUser2 = , posYUser2 = , game_sate = )
+            state = State.objects.get(id = stateId, posXUser1 = posXUser1, posYUser1 = posYUser1, posXUser2 = posXUser2, posYUser2 = posYUser2, game_sate = game_sate)
         except SomeModel.DoesNotExist :
             state = None
 
         if state = None :
-            state = State.objects.create(id = , posXUser1 = , posYUser1 = , posXUser2 = , posYUser2 = , game_sate = )
+            state = State.objects.create(id = stateId, posXUser1 = posXUser1, posYUser1 = posYUser1, posXUser2 = posXUser2, posYUser2 = posYUser2, game_sate = game_sate)
 
         action = self.take_action(state, self.game, self.qtable, self.epsilon)
 
+        try : 
+            nextState = UserGame.objects.get(id= )
+        except SomeModel.DoesNotExist :
+            nextState = None
 
-        nextState, reward = self.move(action)
-
+        reward = reward(game_state)
+        
         nextAction = self.take_action(nextState, self.game, self.qtable, 0.0) 
 
         self.qtable[state][action] = self.qtable[state][action] + self.learning_rate * (reward + self.gama * self.qtable[nextState][nextAction] - self.qtable[state][action])
-
-
-
-
-    # TODO changer le business pour que l'IA s'entraine sur toutes les games
-    # TODO faire une fonction  pour entrainer IA
-    # TODO modifier toute la logique de l'IA
-    # TODO Adapter views / templates
 
