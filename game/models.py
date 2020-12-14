@@ -1,12 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
-from ai.models import Esperance
-
-class IA(models.Model) :
-    qTable = ArrayField(ArrayField(models.FloatField(null=True, blank=True), null=True, blank=True), null=True, blank=True)
-    learningRate = models.FloatField(min=0, max=1)
-    epsilonGreedy = models.DecimalField(min=0, max=1)
+from ai.models import Esperance, AI
 
 
 class Game(models.Model) : 
@@ -15,7 +10,7 @@ class Game(models.Model) :
     # grâce à related_name la classe User aura un attribut games
     # through permet de donner un Model comme table intermédiaire
     players = models.ManyToManyField(User, related_name="games", through="UserGame")
-    ias = models.ManyToManyField(IA, related_name="games", through="UserGame")
+    ias = models.ManyToManyField(AI, related_name="games", through="UserGame")
     winner = models.IntegerField(null=True, blank=True)
 
     
@@ -23,7 +18,7 @@ class Game(models.Model) :
 class UserGame(models.Model) : 
     userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    ia = models.ForeignKey(IA, on_delete=models.CASCADE, null=True, blank=True)
+    ia = models.ForeignKey(AI, on_delete=models.CASCADE, null=True, blank=True)
     color = models.IntegerField()
     userNumber = models.IntegerField()
     posUserX = models.IntegerField(null=True, blank=True)

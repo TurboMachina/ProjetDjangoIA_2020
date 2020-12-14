@@ -14,11 +14,61 @@ def random_user_number() :
 # FONCTION PRINCIPALE POUR JOUER
 #_______________________________________________________________________________
 
+
+def ia_plays(userGame, iaDTO, game, gameDTO) :
+    userGame.move()
+    if game.game_over() :
+        gameDTO.winner = gameDTO.get_winner()
+    gameDTO.next_turn() # TODO recup le move et mettre à jour le userGame
+
+
+def maj_pos(newPosX, newPosY, gameDTO) :
+    if not gameDTO.movement_ok({"x" : newPosX, "y" : newPosY}, gameDTO.turn) :
+            raise InvalidMoveError()
+        
+    gameDTO.update_board(gameDTO.turn, {"posX" : newPosX, "posY" : newPosY})
+    if gameDTO.game_over() :
+        gameDTO.winner = gameDTO.get_winner()
+    gameDTO.next_turn()
+
+
+def move(userGame, moveX, moveY, gameDTO) :
+    newPosX = userGame.posUserX + moveX
+    newPosY = userGame.posUserY + moveY
+
+    maj_pos(newPosX, newPosY, gameDTO)
+    
+    return (newPosX, newPosY)
+
+
+def save_userGame(userGame, newPosX, newPosY) :
+    userGame.posUserX = newPosX
+    userGame.posUserY = newPosY
+    userGame.save()
+
+
+def save_game_state(game, gameDTO) :
+    game.gameState = gameDTO.gameState
+    game.currentUser = gameDTO.turn
+    game.winner = gameDTO.winner
+    game.save()
+
+
+def save_move(userGame, newPosX, newPosY, game, gameDTO) :
+    save_userGame(userGame, newPosX, newPosY)
+
+    save_game_state(game, gameDTO)
+
+
 def assign_pos(userGame, posX, posY=None) :
     if not posY :
         posY = posX
     userGame.posUserX = posX
     userGame.posUserY = posY
+
+def assign_duo(userGame1, userGame2) :
+    assign_pos(userGame1, 0)
+    assign_pos(userGame2, 7)
 
 def start_game(game_id, user) :
     games = models.Game.objects.annotate(Count("players"))
@@ -28,13 +78,12 @@ def start_game(game_id, user) :
     
     gameDTO = Game(game_id)
     gameDTO.init_board()
+    gameDTO.turn = random_user_number()
 
-    game.gameState = gameDTO.gameState
-    game.currentUser = random_user_number()
-    game.save()
+    save_game_state(game, gameDTO)
 
     userGames = models.UserGame.objects.filter(game__id=game.id)
-
+    """
     for userGame in userGames :
         if userGame.userNumber == 1 :
             assign_pos(userGame, 0)
@@ -43,14 +92,18 @@ def start_game(game_id, user) :
         if userGame.ia and userGame.userNumber == game.currentUser :
             ia_plays(userGame, mapIA(userGame), game, gameDTO) # TODO modifier appel de l'ia
         userGame.save()
+    """
+    if (userGames[0].userNumber == 1) :
+        assign_duo(userGames[0], userGames[1])
+    else :
+        assign_duo(userGames[1], userGames[0])
+        if userGames[1].ia and userGames[1].userNumber == gameDTO.turn :
+            (moveX, moveY) = ia_plays()
+            (newPosX, newPosY) = move(userGames[1], moveX, moveY, gameDTO)
+            save_move(userGames[1], newPosX, newPosY, game, gameDTO)
 
     return game
 
-def ia_plays(userGame, iaDTO, game, gameDTO) :
-    userGame.move()
-    if game.game_over() :
-        gameDTO.winner = gameDTO.get_winner()
-    gameDTO.next_turn() # TODO recup le move et mettre à jour le userGame
 
 
 def apply_move(game_id, user, movement) :
@@ -68,32 +121,18 @@ def apply_move(game_id, user, movement) :
     game = userGame.game
     gameDTO = mapGame(game)
     if not gameDTO.winner :
-        newPosX = userGame.posUserX + movement["x"]
-        newPosY = userGame.posUserY + movement["y"]
-        if not gameDTO.movement_ok({"x" : newPosX, "y" : newPosY}, gameDTO.turn) :
-            raise InvalidMoveError()
-        
-        gameDTO.update_board(gameDTO.turn, {"posX" : newPosX, "posY" : newPosY})
-        if gameDTO.game_over() :
-            gameDTO.winner = gameDTO.get_winner()
-        gameDTO.next_turn()
+        (newPosX, newPosY) = move(userGame, movement["x"], movement["y"], gameDTO)
         
         userGame2 = models.UserGame.objects.filter(game__id=game.id).exclude(userId__id=user.id).first()
         if userGame2.ia and not gameDTO.game_over():
-            ia_plays(userGame2, mapIA(userGame2), game, gameDTO) #TODO à changer pour s'adapté à l'ia
+            moveX, moveY = ia_plays() #TODO à changer pour s'adapté à l'ia
+            (newPosXAi, newPosYAi) = move(userGame2, moveX, moveY, gameDTO)
+            save_userGame(userGame2, newPosXAi, newPosYAi)
 
-        userGame.posUserX = newPosX
-        userGame.posUserY = newPosY
-        userGame.save()
-    
-        game.gameState = gameDTO.gameState
-        game.currentUser = gameDTO.turn
-        game.winner = gameDTO.winner
-        game.save()
+        save_move(userGame, newPosX, newPosY, game, gameDTO)
 
     gameDTO.players = mapMultipleUsers([userGame, userGame2])
     
-
     return gameDTO
 
 

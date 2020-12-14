@@ -3,10 +3,10 @@ from random import randint
 import random
 from game.DTO import Game
 from game.DTO import User
-from game.models import UserGame
+from game.models import *
 
 
- """
+
 #_______________________________________________________________________________
 # CLASS STATE
 #_______________________________________________________________________________
@@ -85,18 +85,18 @@ class IA :
         reward = p1 - p2
 
         return self.posY+1 + (self.posX+1)*8, reward # retoune le state (unique) le reward associe
-    """
+
 
 
     # faire un mouvement en fonction de l epsilone greedy (decouverte ou pas)
-    def take_action(self, state, game, epsilon):
+    def take_action(self, epsilon): #TODO adapter pour les mouvements possibles
         moves = [[-1, 0], # Up
                 [1, 0], #Down
                 [0, -1], #Left
                 [0, 1]] #Right
 
         if random.uniform(0, 1) < epsilon:
-            action = moves(randint(0, 3))
+            action = moves[randint(0, len(moves))]
         else:
             bestEsperance = Esperance.objects.all().aggregate(Max('esperance')) # Pas sur que ca fonctionne ?
             action = Move.objects.get(id = bestEsperance.move)
@@ -104,43 +104,34 @@ class IA :
         return action
 
     def reward(self, gameState) : 
+        nbCellsPlayer1 = 0
+        nbCellsPlayer2 = 0
         for line in gameState:
             nbCellsPlayer1 += line.count(1)
             nbCellsPlayer2 += line.count(2)
         return nbCellsPlayer1 - nbCellsPlayer2
 
-    def play(self, stateId, posXUser1, posYUser1, posXUser2, posYUser2, game_sate):
+    def play(self, stateId, posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possible_moves):
         try : 
             state = State.objects.get(id = stateId, posXUser1 = posXUser1, posYUser1 = posYUser1, posXUser2 = posXUser2, posYUser2 = posYUser2, game_sate = game_sate)
         except SomeModel.DoesNotExist :
             state = None
 
-        if state = None :
+        if state == None :
             state = State.objects.create(id = stateId, posXUser1 = posXUser1, posYUser1 = posYUser1, posXUser2 = posXUser2, posYUser2 = posYUser2, game_sate = game_sate)
 
         action = self.take_action(state, self.game, self.epsilon)
 
-        try : 
-            nextState = UserGame.objects.get(id=)
-        except SomeModel.DoesNotExist :
-            nextState = None
+        prevEsp = Esperance.objects.filter(userGames__id=userGame.id).first()
 
         reward = reward(game_state)
         
-        nextAction = self.take_action(nextState, self.game, 0.0) 
+        nextAction = self.take_action(0.0) 
 
-        try : 
-            esperanceBD = Esperance.objects.get(fk = state, fk = action)
-        except SomeModel.DoesNotExist :
-            esperanceBD = None
+        prevEsp.esperance = Esperance.objects.get(fk = state, fk = action) + self.learning_rate * (reward + self.gama * Esperance.objects.get(fk = nextState, fk = nextAction) - Esperance.objects.get(fk = state, fk = action))
+        prevEsp.save()
 
-        esperance = Esperance.objects.get(fk = state, fk = action) + self.learning_rate * (reward + self.gama * Esperance.objects.get(fk = nextState, fk = nextAction) - Esperance.objects.get(fk = state, fk = action))
-
-        if esperanceBD = None :
-            esperanceBD = Esperance.objects.create(fk = state, fk = action, esperance = esperance)
-        else : 
-            #esperanceBD = modifier esperance dans la BD TODO
-
+        return action
 
 
 

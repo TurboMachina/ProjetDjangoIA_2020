@@ -2,13 +2,6 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
 
-class AI(models.Model) : 
-    epsilon_greedy = models.FloatField(min=0, max=1)
-    learning_rate = models.FloatField(min=0, max=1)
-    gama = models.FloatField(min=0, max=1)
-    states = models.ManyToManyField(State) 
-
-
 class State(models.Model) : 
     posXUser1 = models.IntegerField()
     posYUser1 = models.IntegerField()
@@ -18,13 +11,21 @@ class State(models.Model) :
     game_sate = ArrayField(ArrayField(models.IntegerField()))
 
 
-class Esperance(models.Model) : 
-    state = models.ForeignKey(State, on_delete = models.CASCADE)
-    move = models.ForeignKey(Move, on_delete=models.CASCADE)
-    esperance = models.FloatField(min=0, max=1)
+class AI(models.Model) : 
+    epsilon_greedy = models.FloatField(min=0, max=1)
+    learning_rate = models.FloatField(min=0, max=1)
+    gama = models.FloatField(min=0, max=1)
+    states = models.ManyToManyField(State)
 
 
 class Move(models.Model) : 
     moveY = models.IntegerField(null=True, blank=True)
     moveX = models.IntegerField(null=True, blank=True)
+
+
+class Esperance(models.Model) : 
+    state = models.ForeignKey(State, on_delete = models.CASCADE)
+    move = models.ForeignKey(Move, on_delete=models.CASCADE)
+    esperance = models.FloatField(min=0, max=1)
+
 
