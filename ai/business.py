@@ -3,6 +3,7 @@ from random import randint
 import random
 from game.DTO import Game
 from game.DTO import User
+from ai.models import *
 from game.models import *
 from django.db.models import Max
 
