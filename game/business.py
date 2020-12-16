@@ -2,7 +2,7 @@ from django.db.models import Count, Q
 
 from game.DTO import *
 import random
-import game.models as models
+from game import models
 from game.error import *
 from game.mapper import *
 from ai.business import play
@@ -24,7 +24,7 @@ def ia_plays(userGame, iaDTO, game, gameDTO) :
 
 def maj_pos(newPosX, newPosY, gameDTO) :
     if not gameDTO.movement_ok({"x" : newPosX, "y" : newPosY}, gameDTO.turn) :
-            raise InvalidMoveError()
+        raise InvalidMoveError()
         
     gameDTO.update_board(gameDTO.turn, {"posX" : newPosX, "posY" : newPosY})
     if gameDTO.game_over() :
@@ -72,8 +72,10 @@ def assign_duo(userGame1, userGame2) :
 
 def start_game(game_id, user) :
     games = models.Game.objects.annotate(Count("players"))
-    games = games.annotate(Count("ia"))
-    game = games.filter(id=game_id, players__id=user.id, gameState__isnull=True & Q(Q(players__count=2) | Q(players__count=1, ia__count=1))).first()
+    games = games.annotate(Count("ias"))
+    query = Q(players__count=2) | Q(players__count=1, ias__count=1)
+    game = games.filter(id=game_id, players__id=user.id, gameState__isnull=True).filter(query).first()
+    
     if not game :
         raise StartGameError()
     

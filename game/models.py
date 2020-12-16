@@ -13,7 +13,6 @@ class Game(models.Model) :
     ias = models.ManyToManyField(AI, related_name="games", through="UserGame")
     winner = models.IntegerField(null=True, blank=True)
 
-    
 
 class UserGame(models.Model) : 
     userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -23,4 +22,4 @@ class UserGame(models.Model) :
     userNumber = models.IntegerField()
     posUserX = models.IntegerField(null=True, blank=True)
     posUserY = models.IntegerField(null=True, blank=True)
-    movePrecedent = models.ForeignKey(Esperance, on_delete=models.DO_NOTHING, related_name="UserGames")
+    movePrecedent = models.ForeignKey(Esperance, on_delete=models.DO_NOTHING, related_name="UserGames", null=True, blank=True)
