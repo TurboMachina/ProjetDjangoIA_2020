@@ -28,5 +28,3 @@ class Esperance(models.Model):
     state = models.ForeignKey(State, on_delete = models.CASCADE)
     move = models.ForeignKey(Move, on_delete=models.CASCADE)
     esperance = MinMaxFloat(min_value=0, max_value=1)
-
-

@@ -35,7 +35,7 @@ class AlreadyPlayerError(Error) :
 
 class AlreadyTwoPlayerError(Error) :
     def __init__(self) :
-        self.message = "there is already two player"
+        self.message = "there is already two players"
 
 class ColorError(Error) :
     pass

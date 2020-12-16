@@ -84,7 +84,7 @@ DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2',
                          'HOST': 'db',
                          'PORT': '5432',
                          }
-             }
+            }
 
 
 # Password validation

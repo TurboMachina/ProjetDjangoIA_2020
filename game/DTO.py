@@ -221,8 +221,6 @@ class Game :
     def possible_actions(self, posX, posY, playerNumber) :
         actions = list()
         for action in [[0, 1], [0, -1], [1, 0], [-1, 0]] :
-            newPosY = posY + action[0]
-            newPosX = posX + action[1]
-            if newPosX < self.col_size and newPosX >= 0 and newPosY < self.col_size and newPosY >= 0 and not self.gameState[newPosY][newPosX] == (playerNumber % 2 + 1):
+            if self.movement_ok({"x" : posX + action[0], "y" : posY + action[1]}, playerNumber) :
                 actions.append(action)
         return actions

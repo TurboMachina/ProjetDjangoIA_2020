@@ -4,9 +4,9 @@ from django.db import migrations
 
 def load_moves(apps, schema_editor) :
     Move = apps.get_model("ai", "Move")
-    for x in range(2) :
-        for y in range(2) :
-            Move.objects.create(moveX=x, moveY=y)
+    for i in range(-1, 2, 2) :
+        Move.objects.create(moveX=i, moveY=0)
+        Move.objects.create(moveX=0, moveY=i)
 
 class Migration(migrations.Migration):
 
