@@ -73,7 +73,7 @@ def assign_duo(userGame1, userGame2) :
     assign_pos(userGame2, 7)
 
 def start_game(game_id, user) :
-    games = models.Game.objects.annotate(Count("players"))
+    games = gameModels.Game.objects.annotate(Count("players"))
     games = games.annotate(Count("ias"))
     query = (Q(players__count=2) | Q(players__count=1, ias__count=1))
     games = games.filter(query)
