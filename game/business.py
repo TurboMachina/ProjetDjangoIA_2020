@@ -72,8 +72,10 @@ def assign_duo(userGame1, userGame2) :
 
 def start_game(game_id, user) :
     games = models.Game.objects.annotate(Count("players"))
-    games = games.annotate(Count("ia"))
-    game = games.filter(id=game_id, players__id=user.id, gameState__isnull=True & Q(Q(players__count=2) | Q(players__count=1, ia__count=1))).first()
+    games = games.annotate(Count("ias"))
+    query = (Q(players__count=2) | Q(players__count=1, ias__count=1))
+    games = games.filter(query)
+    game = games.filter(id=game_id, players__id=user.id, gameState__isnull=True).first()
     if not game :
         raise StartGameError()
     

@@ -23,4 +23,4 @@ class UserGame(models.Model) :
     userNumber = models.IntegerField()
     posUserX = models.IntegerField(null=True, blank=True)
     posUserY = models.IntegerField(null=True, blank=True)
-    movePrecedent = models.ForeignKey(Esperance, on_delete=models.DO_NOTHING, related_name="UserGames")
+    movePrecedent = models.ForeignKey(Esperance, on_delete=models.DO_NOTHING, related_name="UserGames",null=True, blank=True)
