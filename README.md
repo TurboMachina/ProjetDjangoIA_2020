@@ -6,26 +6,25 @@ Le but est simple, prennez un maximum de cases possible en jouant contre un ami 
 
 ### Découpe de notre projet
 
-Notre projet est découpé en deux applications, la connection et le jeu. <br>
-- La partie connection reprend le model, les vues et les templates utilent à la connection <br>
-- La partie jeu est découpé en plusieurs sous parties : <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Le model qui permet de faire le lien avec la base de donnée <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Le mapper qui fait le lien entre les models et le DTO <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Le DTO qui permet de créer les classes orienté objet utilisé dans le business <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Le business que nous utilisons pour faire toute la logique principale du jeu <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Les views qui permettent de gérer les templates <br>
-    Et l'IA, notre intélligence artificielle <br>
-
-![Screenshot](decoupe.png)
+Notre projet est découpé en trois applications, la connection, le jeu et l'intelligence artificielle. <br>
+- Premièrement, l'application "connection" reprend le model, les vues et les templates utilent à la connection <br>
+- Ensuite, l'application "game" permet de s'occuper de la logique relative à une partie <br>
+- Pour finir, l'application "ai", gère toute la logique de cette dernière <br>
 
 
-### Notre IA
+### Notre Intelligence Artificielle 
 
-Nous utilisons la Q function pour notre jeu. <br>
-(Voir rapport sur notre IA)
+Notre IA est l'implémentation d'une méthode de Reinforcement Learning : la Q-Function. <br>
 
 
-Notre jeu est encore en cours de travail. 
+### Nécessité pour lancer le jeu
+
+Python3 <br>
+Django <br>
+psycopg2 <br>
+
+---
+Toute information relative au projet se trouve dans le dossier <br>
 
 ---
 

@@ -104,10 +104,9 @@ def create_game_vs_ia_form(request, ia_id) :
 
 def create_game_vs_ia(request, ia_id) :
     try :
-        form = Vs_ia_form(request.GET)
-        print(request.POST)
+        form = Vs_ia_form(request.POST)
         game = business.create_game(form, request.user.id)
         business.join_ia(game.id, ia_id, form)
     except Error as error :
         return render(request, "game/errorPage.html", {"error_message" : error.message})
-    return redirect("game/resumeGame/" + game.id + "/")
+    return redirect("/game/resumeGame/" + str(game.id) + "/")

@@ -73,7 +73,7 @@ def assign_duo(userGame1, userGame2) :
     assign_pos(userGame2, 7)
 
 def start_game(game_id, user) :
-    games = models.Game.objects.annotate(Count("players"))
+    games = gameModels.Game.objects.annotate(Count("players"))
     games = games.annotate(Count("ias"))
     query = (Q(players__count=2) | Q(players__count=1, ias__count=1))
     games = games.filter(query)
@@ -130,10 +130,10 @@ def apply_move(game_id, user, movement) :
     gameDTO = mapGame(game)
     if not gameDTO.winner :
         (newPosX, newPosY) = move(userGame, movement["x"], movement["y"], gameDTO)
-
+        print("test")
 
         if userGame2.ia and not gameDTO.game_over():
-            (moveX, moveY) = play(userGame.posUserX, userGame.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber), gameDTO.turn)
+            (moveX, moveY) = play(newPosX, newPosY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber), gameDTO.turn)
             (newPosXAi, newPosYAi) = move(userGame2, moveX, moveY, gameDTO)
             save_userGame(userGame2, newPosXAi, newPosYAi)
 
