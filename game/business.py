@@ -131,10 +131,10 @@ def apply_move(game_id, user, movement) :
     gameDTO = mapGame(game)
     if not gameDTO.winner :
         (newPosX, newPosY) = move(userGame, movement["x"], movement["y"], gameDTO)
-
+        print("test")
 
         if userGame2.ia and not gameDTO.game_over():
-            (moveX, moveY) = play(userGame.posUserX, userGame.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber), gameDTO.turn)
+            (moveX, moveY) = play(newPosX, newPosY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber), gameDTO.turn)
             (newPosXAi, newPosYAi) = move(userGame2, moveX, moveY, gameDTO)
             save_userGame(userGame2, newPosXAi, newPosYAi)
 
