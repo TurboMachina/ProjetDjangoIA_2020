@@ -5,7 +5,6 @@ import random
 import game.models as models
 from game.error import *
 from game.mapper import *
-from game.IA import IA
 
 def random_user_number() : 
     return random.randint(1,2)
@@ -210,7 +209,6 @@ def train(self, ia_id, number_games) :
         players.append(IA(0, i, posX, posY, epsilon=ia.epsilonGreedy, learning_rate=ia.learningRate))
 
     game = Game(players) # ajout params en fonction du code de jordan(TODO)
-"""
 def train(self, ia1, ia2, number_games) :
     players = [ia1, ia2]
     game = Game(players) # ajout params 
@@ -225,17 +223,7 @@ def train(self, ia1, ia2, number_games) :
     ia.save()
 
 
-def create_ia(form) :
-    if not form.is_valid() :
-        pass
-    epsilon = form.cleaned_data["epsilonGreedy"]
-    learningRate = form.cleaned_data["learningRate"]
-
-    ia = models.IA.objects.create(epsilonGreedy=epsilon, learningRate=learningRate)
-
-    return ia 
-
-
 def list_ia_trainable() :
     ia_list = models.IA.objects.filter(qTable__isnull=True)
     return ia_list
+"""

@@ -14,7 +14,7 @@ class State(models.Model) :
 class AI(models.Model) : 
     epsilon_greedy = models.FloatField(min=0, max=1)
     learning_rate = models.FloatField(min=0, max=1)
-    gama = models.FloatField(min=0, max=1)
+    gamma = models.FloatField(min=0, max=1)
     states = models.ManyToManyField(State)
 
 

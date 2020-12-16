@@ -1,25 +1,23 @@
-import numpy as np
 from random import randint
 import random
 from game.DTO import Game
 from game.DTO import User
 from game.models import *
-from django.db.models import Max
+from django.db.models import Max, Q
 
 
 def take_action(epsilon, state, possible_moves):
-    possible_esperances = []
+    esp = 0
     if random.uniform(0, 1) < epsilon:
         action = possible_moves[randint(0, len(possible_moves))]
+        esp = Esperance.objects.filter(state__id=state.id, move__moveX=action[0], move__moveY=action[1])
     else:
-        for move in possible_moves : 
-            moveId.id = Move.objects.get(moveY=move[0], moveX=move[1])
-            possible_esperances.append(Esperance.objects.get(esperance__id=moveId.id))
+        best_esperance = Esperance.objects.filter(state__id=state.id).order_by("-esperance").first()
 
-        best_esperance = max(possible_esperances.esperance)
-        action = Move.objects.get(id = best_esperance.move)
+        action = [best_esperance.move.moveX, best_esperance.move.moveY]
+        esp = best_esperance
 
-    return action
+    return (action, esp)
 
 
 def reward(game_state) : 
@@ -31,27 +29,46 @@ def reward(game_state) :
     return nb_cells_player1 - nb_cells_player2
 
 
-def play(epsilon, learning_rate, gama, stateId, posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possible_moves):
+def play(gama, stateId, posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possible_moves):
     try : 
-        state = State.objects.get(id = stateId, posXUser1 = posXUser1, posYUser1 = posYUser1, posXUser2 = posXUser2, posYUser2 = posYUser2, game_sate = game_sate)
+        state = State.objects.get(turn=turn, posXUser1=posXUser1, posYUser1=posYUser1, posXUser2=posXUser2, posYUser2=posYUser2, game_sate=game_state)
     except SomeModel.DoesNotExist :
-        state = None
+        state = State.objects.create(turn=turn, posXUser1=posXUser1, posYUser1=posYUser1, posXUser2=posXUser2, posYUser2=posYUser2, game_sate=game_state)
+        query = Q()
+        for move in possible_moves :
+            query = query | Q(moveX=move[0], moveY=move[1])
+            moves = Move.objects.filter(query)
+        for move in moves :
+            Esperance.objects.create(move=move, state=state, esperance=0)
 
-    if state == None :
-        state = State.objects.create(id = stateId, posXUser1 = posXUser1, posYUser1 = posYUser1, posXUser2 = posXUser2, posYUser2 = posYUser2, game_sate = game_sate)
-
-    action = take_action(epsilon, state, possible_moves)
+    action, current_esp = take_action(userGame.ia.epsilon, state, possible_moves)
 
     prevEsp = Esperance.objects.filter(userGames__id=userGame.id).first()
 
-    action_reward = reward(game_state)
+    if prevEsp :
+        action_reward = reward(game_state)
+        
+        __, best_current_esperance = take_action(0.0, state, possible_moves) 
+
+        #current_esperance.esperance = Esperance.objects.get(fk = state, fk = action)
+
+        #prevEsp.esperance = current_esperance.esperance + learning_rate * (action_reward + gama * prevEsp.esperance - current_esperance.esperance))
+        prevEsp.esperance = prevEsp.esperance + userGame.ia.learning_rate * (action_reward + userGame.ia.gamma * best_current_esperance - prevEsp.esperance)
+        prevEsp.save()
     
-    nextAction = take_action(0.0, state, possible_moves) 
+    userGame.movePrecedent = current_esp
+    userGame.save()
 
-    current_esperance.esperance = Esperance.objects.get(fk = state, fk = action)
+    return (action[0], action[1])
 
-    current_esperance.esperance = current_esperance.esperance + learning_rate * (action_reward + gama * prevEsp.esperance - current_esperance.esperance))
-    current_esperance.esperance.save()
 
-    return action
+def create_ia(form) :
+    if not form.is_valid() :
+        pass
+    epsilon = form.cleaned_data["epsilonGreedy"]
+    learningRate = form.cleaned_data["learningRate"]
+    gamma = form.cleaned_data["gamma"]
 
+    ia = models.IA.objects.create(epsilonGreedy=epsilon, learningRate=learningRate, gamma=gamma)
+
+    return ia 

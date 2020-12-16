@@ -1,24 +1,25 @@
 from django.shortcuts import render, redirect
 from django import forms
 from ai import business
-from game.error import *
+from ai.error import Error
 
 # Create your views here.
 
 class IAForm(forms.Form) :
     epsilonGreedy = forms.FloatField(1, 0)
     learningRate = forms.FloatField(1, 0)
+    gamma = forms.FloatField(1, 0)
 
 def create_ia(request) :
     if request.method == "GET" :
-        return render(request, "game/createIA.html", {"form" : IAForm()})
+        return render(request, "ai/createIA.html", {"form" : IAForm()})
     
     if request.method == "POST" :
         try :
             ia = business.create_IA(IAForm(request.POST))
         except Error as error :
-            return render(request, "game/errorPage.html", {"error_message" : error.message, "form" : IAForm()})
-        return render(request, "game/IACreated.html", {"ia" : ia})
+            return render(request, "ai/errorPage.html", {"error_message" : error.message, "form" : IAForm()})
+        return render(request, "ai/IACreated.html", {"ia" : ia})
 
 
 def list_ia_trainable(request) :
