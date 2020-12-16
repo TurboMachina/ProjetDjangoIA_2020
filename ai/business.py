@@ -4,6 +4,7 @@ from game.DTO import Game
 from game.DTO import User
 from ai.models import *
 from django.db.models import Max, Q
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def take_action(epsilon, state, possible_moves):
@@ -17,7 +18,7 @@ def take_action(epsilon, state, possible_moves):
         action = [best_esperance.move.moveX, best_esperance.move.moveY]
         esp = best_esperance
 
-    return (action, esp)
+    return action, esp
 
 
 def reward(game_state) : 
@@ -29,16 +30,16 @@ def reward(game_state) :
     return nb_cells_player1 - nb_cells_player2
 
 
-def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possible_moves):
+def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possible_moves, turn):
     try : 
         state = State.objects.get(turn=turn, posXUser1=posXUser1, posYUser1=posYUser1, posXUser2=posXUser2, posYUser2=posYUser2, game_sate=game_state)
-    except SomeModel.DoesNotExist :
+    except ObjectDoesNotExist:
         state = State.objects.create(turn=turn, posXUser1=posXUser1, posYUser1=posYUser1, posXUser2=posXUser2, posYUser2=posYUser2, game_sate=game_state)
         query = Q()
-        for move in possible_moves :
+        for move in possible_moves:
             query = query | Q(moveX=move[0], moveY=move[1])
-            moves = Move.objects.filter(query)
-        for move in moves :
+        moves = Move.objects.filter(query)
+        for move in moves:
             Esperance.objects.create(move=move, state=state, esperance=0)
 
     action, current_esp = take_action(userGame.ia.epsilon_greedy, state, possible_moves)
@@ -59,7 +60,7 @@ def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possi
     userGame.movePrecedent = current_esp
     userGame.save()
 
-    return (action[0], action[1])
+    return action[0], action[1]
 
 
 def create_ia(form) :
