@@ -6,6 +6,7 @@ import game.models as models
 from game.error import *
 from game.mapper import *
 from ai.business import play
+from ai.models import *
 
 def random_user_number() : 
     return random.randint(1,2)
@@ -102,7 +103,7 @@ def start_game(game_id, user) :
         userGame1, userGame2 = userGames[1], userGames[0]
 
     if userGame2.ia and userGame2.userNumber == gameDTO.turn :
-        (moveX, moveY) = play(userGame1.posUserX, userGame1.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber))
+        (moveX, moveY) = play(userGame1.posUserX, userGame1.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber), gameDTO.turn)
         (newPosX, newPosY) = move(userGames[1], moveX, moveY, gameDTO)
         save_move(userGames[1], newPosX, newPosY, game, gameDTO)
     
@@ -128,7 +129,7 @@ def apply_move(game_id, user, movement) :
         
         userGame2 = models.UserGame.objects.filter(game__id=game.id).exclude(userId__id=user.id).first()
         if userGame2.ia and not gameDTO.game_over():
-            (moveX, moveY) = play(userGame.posUserX, userGame.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber))
+            (moveX, moveY) = play(userGame.posUserX, userGame.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber), gameDTO.turn)
             (newPosXAi, newPosYAi) = move(userGame2, moveX, moveY, gameDTO)
             save_userGame(userGame2, newPosXAi, newPosYAi)
 
@@ -200,7 +201,7 @@ def verrification_before_join(label, form, game_id) :
 def join_ia(game_id, ia_id, form) :
     game, hex_color = verrification_before_join("ia_color", form, game_id)
 
-    ai = ai.models.AI.objects.filter(id=ia_id).first()
+    ai = AI.objects.filter(id=ia_id).first()
 
     models.UserGame.objects.create(ia=ai, game=game, color=hex_color, userNumber=2)
 
