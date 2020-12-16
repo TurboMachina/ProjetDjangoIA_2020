@@ -1,10 +1,11 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from game.DTO import *
 import random
 import game.models as models
 from game.error import *
 from game.mapper import *
+from ai.business import play
 
 def random_user_number() : 
     return random.randint(1,2)
@@ -71,7 +72,8 @@ def assign_duo(userGame1, userGame2) :
 
 def start_game(game_id, user) :
     games = models.Game.objects.annotate(Count("players"))
-    game = games.filter(id=game_id, players__id=user.id, gameState__isnull=True, players__count=2).first()
+    games = games.annotate(Count("ia"))
+    game = games.filter(id=game_id, players__id=user.id, gameState__isnull=True & Q(Q(players__count=2) | Q(players__count=1, ia__count=1))).first()
     if not game :
         raise StartGameError()
     
@@ -94,15 +96,17 @@ def start_game(game_id, user) :
     """
     if (userGames[0].userNumber == 1) :
         assign_duo(userGames[0], userGames[1])
+        userGame1, userGame2 = userGames[0], userGames[1]
     else :
         assign_duo(userGames[1], userGames[0])
-        if userGames[1].ia and userGames[1].userNumber == gameDTO.turn :
-            (moveX, moveY) = ia_plays()
-            (newPosX, newPosY) = move(userGames[1], moveX, moveY, gameDTO)
-            save_move(userGames[1], newPosX, newPosY, game, gameDTO)
+        userGame1, userGame2 = userGames[1], userGames[0]
 
+    if userGame2.ia and userGame2.userNumber == gameDTO.turn :
+        (moveX, moveY) = play(userGame1.posUserX, userGame1.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber))
+        (newPosX, newPosY) = move(userGames[1], moveX, moveY, gameDTO)
+        save_move(userGames[1], newPosX, newPosY, game, gameDTO)
+    
     return game
-
 
 
 def apply_move(game_id, user, movement) :
@@ -124,7 +128,7 @@ def apply_move(game_id, user, movement) :
         
         userGame2 = models.UserGame.objects.filter(game__id=game.id).exclude(userId__id=user.id).first()
         if userGame2.ia and not gameDTO.game_over():
-            moveX, moveY = ia_plays() #TODO à changer pour s'adapté à l'ia
+            (moveX, moveY) = play(userGame.posUserX, userGame.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, userGame2, gameDTO.possible_actions(userGame2.posUserX, userGame2.posUserY, userGame2.userNumber))
             (newPosXAi, newPosYAi) = move(userGame2, moveX, moveY, gameDTO)
             save_userGame(userGame2, newPosXAi, newPosYAi)
 
@@ -173,23 +177,39 @@ def joinable_games(user) :
     return games
 
 
-def join_game(game_id, user, form) :
+def verrification_before_join(label, form, game_id) :
     game = models.Game.objects.get(id=game_id)
+
     players = game.players.all()
-    if user in players :
-        raise AlreadyPlayerError()
 
     if len(players) == 2 or (players and game.ias) :
         raise AlreadyTwoPlayerError()
     
     if not form.is_valid() :
         raise ColorInvalidError()
-    hex_color = int(form.cleaned_data["hex_color"].replace("#", ""), 16)
+    hex_color = int(form.cleaned_data[label].replace("#", ""), 16)
 
     if hex_color == 0 :
         raise ForbidenColorError()
     if models.UserGame.objects.filter(game__id=game_id, color=hex_color).exists() :
         raise ColorAlreadyTakenError()
+    
+    return (game, hex_color)
+
+
+def join_ia(game_id, ia_id, form) :
+    game, hex_color = verrification_before_join("ia_color", form, game_id)
+
+    ai = ai.models.AI.objects.filter(id=ia_id).first()
+
+    models.UserGame.objects.create(ia=ai, game=game, color=hex_color, userNumber=2)
+
+
+def join_game(game_id, user, form) :
+    game, hex_color = verrification_before_join("hex_color", form, game_id)
+    
+    if user in game.players.all() :
+        raise AlreadyPlayerError()
     
     models.UserGame.objects.create(userId=user, game=game, color=hex_color, userNumber=2)
 
@@ -222,8 +242,4 @@ def train(self, ia1, ia2, number_games) :
     ia.qtable = players[1].qTable
     ia.save()
 
-
-def list_ia_trainable() :
-    ia_list = models.IA.objects.filter(qTable__isnull=True)
-    return ia_list
 """

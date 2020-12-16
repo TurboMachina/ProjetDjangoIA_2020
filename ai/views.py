@@ -6,9 +6,9 @@ from ai.error import Error
 # Create your views here.
 
 class IAForm(forms.Form) :
-    epsilonGreedy = forms.FloatField(1, 0)
-    learningRate = forms.FloatField(1, 0)
-    gamma = forms.FloatField(1, 0)
+    epsilonGreedy = forms.FloatField(label="epsilon greedy")
+    learningRate = forms.FloatField(label="learning rate")
+    gamma = forms.FloatField(label="gamma")
 
 def create_ia(request) :
     if request.method == "GET" :
@@ -16,15 +16,15 @@ def create_ia(request) :
     
     if request.method == "POST" :
         try :
-            ia = business.create_IA(IAForm(request.POST))
+            ia = business.create_ia(IAForm(request.POST))
         except Error as error :
             return render(request, "ai/errorPage.html", {"error_message" : error.message, "form" : IAForm()})
         return render(request, "ai/IACreated.html", {"ia" : ia})
 
 
-def list_ia_trainable(request) :
-    IAList = business.list_ia_trainable()
-    return render(request, "game/listIATrainable.html", {"IAList", IAList})
+def list_ia(request) :
+    IAList = business.list_ia()
+    return render(request, "ai/listIA.html", {"listIA": IAList})
 
 
 class IATrainForm(forms.Form) :

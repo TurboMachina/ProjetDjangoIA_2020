@@ -1,5 +1,4 @@
 from game.DTO import *
-from game.IA import IA
 
 def mapUser(userGame) :
     return User(userGame.userId.id,
@@ -10,7 +9,7 @@ def mapUser(userGame) :
                 userGame.userNumber)
 
 def mapIA(userGame) :
-    return IA(userGame.ia.id,
+    return User(userGame.ia.id,
                 "IA",
                 userGame.color,
                 userGame.posUserX,

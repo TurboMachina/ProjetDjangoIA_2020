@@ -1,16 +1,16 @@
 {% extends 'game/base.html' %}
 {% load static %}
 {% block content %}
-<h1>Trainable AI</h1>
+<h1>AI</h1>
 <table>
     <tr>
         <th>AI id</th>
-        <th>Train</th>
+        <th></th>
     </tr>
     {% for ia in listIA %}
     <tr>
         <td>{{ia.id}}</td>
-        <td><a class=button href="/game/trainForm/{{ia.id}}">Train</a></td>
+        <td><a class=button href="/game/createGameVsAiForm/{{ia.id}}">play</a></td>
     </tr>
     {% endfor %}
 </table>

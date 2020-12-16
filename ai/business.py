@@ -2,7 +2,7 @@ from random import randint
 import random
 from game.DTO import Game
 from game.DTO import User
-from game.models import *
+from ai.models import *
 from django.db.models import Max, Q
 
 
@@ -29,7 +29,7 @@ def reward(game_state) :
     return nb_cells_player1 - nb_cells_player2
 
 
-def play(gama, stateId, posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possible_moves):
+def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possible_moves):
     try : 
         state = State.objects.get(turn=turn, posXUser1=posXUser1, posYUser1=posYUser1, posXUser2=posXUser2, posYUser2=posYUser2, game_sate=game_state)
     except SomeModel.DoesNotExist :
@@ -41,7 +41,7 @@ def play(gama, stateId, posXUser1, posYUser1, posXUser2, posYUser2, game_state, 
         for move in moves :
             Esperance.objects.create(move=move, state=state, esperance=0)
 
-    action, current_esp = take_action(userGame.ia.epsilon, state, possible_moves)
+    action, current_esp = take_action(userGame.ia.epsilon_greedy, state, possible_moves)
 
     prevEsp = Esperance.objects.filter(userGames__id=userGame.id).first()
 
@@ -69,6 +69,11 @@ def create_ia(form) :
     learningRate = form.cleaned_data["learningRate"]
     gamma = form.cleaned_data["gamma"]
 
-    ia = models.IA.objects.create(epsilonGreedy=epsilon, learningRate=learningRate, gamma=gamma)
+    ia = AI.objects.create(epsilon_greedy=epsilon, learning_rate=learningRate, gamma=gamma)
 
     return ia 
+
+
+def list_ia() :
+    ia_list = AI.objects.all()
+    return ia_list

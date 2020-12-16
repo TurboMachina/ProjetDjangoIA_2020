@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <h1>create IA</h1>
-<form method="POST" action="/game/createIA/">
+<form method="POST" action="/ai/createAI/">
     {% csrf_token %}
     {{ form }}
     <div id="error_message">{{error_message}}</div>
