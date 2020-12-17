@@ -4,55 +4,55 @@ class Error(Exception) :
 
 class StartGameError(Error) :
     def __init__(self) :
-        self.message = "you are not allow to start this game"
+        self.message = "You are not allowed to start this game"
 
 
 class NotPlayerError(Error) :
     def __init__(self) :
-        self.message = "you are not a player of this game"
+        self.message = "You are not a player of this game"
 
 
 class GameNotStartedError(Error) :
     def __init__(self) :
-        self.message = "this game is not started yet"
+        self.message = "tThis game is not started yet"
 
 
 
 class NotYourTurnError(Error) :
     def __init__(self) :
-        self.message = "this is not your turn"
+        self.message = "It is not your turn"
 
 
 class InvalidMoveError(Error) :
     def __init__(self) :
-        self.message = "invalid move"
+        self.message = "Invalid move"
 
 
 class AlreadyPlayerError(Error) :
     def __init__(self) :
-        self.message = "you are already in this game"
+        self.message = "You are already in this game"
 
 
 class AlreadyTwoPlayerError(Error) :
     def __init__(self) :
-        self.message = "there is already two players"
+        self.message = "There is already two players"
 
 class ColorError(Error) :
     pass
 
 class ColorInvalidError(ColorError) :
     def __init__(self) :
-        self.message = "invalid color"
+        self.message = "Invalid color"
 
 class ColorAlreadyTakenError(Error) :
     def __init__(self) :
-        self.message = "this color is already taken"
+        self.message = "This color is already taken"
 
 class ForbidenColorError(ColorError) :
     def __init__(self) : 
-        self.message = "this color is forbiden"
+        self.message = "This color is forbiden"
 
 
 class NumberOfGameNotValid(Error) :
     def __init__(self) :
-        self.message = "number of games is not valid"
+        self.message = "The number of games is not valid"

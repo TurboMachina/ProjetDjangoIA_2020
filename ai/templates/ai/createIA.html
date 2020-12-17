@@ -1,7 +1,7 @@
 {% extends 'game/base.html' %}
 {% load static %}
 {% block content %}
-<h1>create IA</h1>
+<h1>Create an IA</h1>
 <form method="POST" action="/ai/createAI/">
     {% csrf_token %}
     {{ form }}

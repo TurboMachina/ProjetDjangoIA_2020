@@ -1,17 +1,25 @@
 {% extends 'game/base.html' %}
 {% load static %}
 {% block content %}
-<h1>AI</h1>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'ai/style.css' %}">
+    {% block head %}
+    {% endblock head %}
+</head>
+
+<h1>List of AI</h1>
 <table>
     <tr>
-        <th>AI id</th>
-        <th></th>
+        <th>AI params</th>
+        <th>Play</th>
+        <th>Train</th>
     </tr>
     {% for ia in listIA %}
     <tr>
-        <td>id : {{ia.id}} EG : {{ia.epsilon_greedy}} LR : {{ia.learning_rate}} gamma : {{ia.gamma}}</td>
-        <td><a class=button href="/game/createGameVsAiForm/{{ia.id}}/">play</a></td>
-        <td><a class=button href="/game/trainAIForm/{{ia.id}}/">train</a></td>
+        <td class="tdStyle">ID : {{ia.id}} <br>EG : {{ia.epsilon_greedy}} <br>LR : {{ia.learning_rate}} <br>Gamma : {{ia.gamma}}</td>
+        <td class="tdStyle"><a class=button href="/game/createGameVsAiForm/{{ia.id}}/">play</a></td>
+        <td class="tdStyle"><a class=button href="/game/trainAIForm/{{ia.id}}/">train</a></td>
     </tr>
     {% endfor %}
 </table>

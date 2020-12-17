@@ -1,13 +1,13 @@
 {% extends 'game/base.html' %}
 {% load static %}
 {% block content %}
-<h1>your color in the game</h1>
+<h1>Choose your color</h1>
 <form method="POST" action="/game/joinGame/{{game_id}}/">
     {% csrf_token %}
     {{form}}
     {% if error_message %}
     <p id="error_message">{{error_message}}</p>
     {% endif %}
-    <p><button class="button" type="submit">send</button></p>
+    <p><button class="button" type="submit">choose</button></p>
 </form>
 {% endblock content %}
