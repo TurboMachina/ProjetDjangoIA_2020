@@ -22,13 +22,14 @@ def take_action(epsilon, state, possible_moves):
     return action, esp
 
 
-def reward(game_state) : 
-    nb_cells_player1 = 0
-    nb_cells_player2 = 0
+def reward(game_state, player_number) : 
+    nb_cells_player = 0
+    nb_cells_oponent = 0
+    oponent_number = (player_number % 2) + 1
     for line in game_state:
-        nb_cells_player1 += line.count(1)
-        nb_cells_player2 += line.count(2)
-    return nb_cells_player1 - nb_cells_player2
+        nb_cells_player += line.count(player_number)
+        nb_cells_oponent += line.count(oponent_number)
+    return nb_cells_player - nb_cells_oponent
 
 
 def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possible_moves, turn):
@@ -42,25 +43,26 @@ def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possi
         moves = Move.objects.filter(query)
         for move in moves:
             Esperance.objects.create(move=move, state=state, esperance=0)
-    for possible_move in possible_moves :
-        print("--")
-        print(str(possible_move[0]) + " x")
-        print(str(possible_move[1]) + " y")
-        print("--") 
+    
     action, current_esp = take_action(userGame.ia.epsilon_greedy, state, possible_moves)
     prevEsp = Esperance.objects.filter(userGames__id=userGame.id).first()
 
+    for line in game_state :
+        lineStr = ""
+        for elem in line :
+            lineStr += str(elem)
+        print(lineStr)
+
     if prevEsp :
-        action_reward = reward(game_state)
+        action_reward = reward(game_state, turn)
         
         __, best_current_esperance = take_action(0.0, state, possible_moves) 
 
         #current_esperance.esperance = Esperance.objects.get(fk = state, fk = action)
 
         #prevEsp.esperance = current_esperance.esperance + learning_rate * (action_reward + gama * prevEsp.esperance - current_esperance.esperance))
-        prevEsp.esperance = prevEsp.esperance + userGame.ia.learning_rate * (action_reward + userGame.ia.gamma * best_current_esperance.esperance - prevEsp.esperance)
+        prevEsp.esperance = prevEsp.esperance + userGame.ia.learning_rate * (float(action_reward) + userGame.ia.gamma * best_current_esperance.esperance - prevEsp.esperance)
         prevEsp.save()
-    
     userGame.movePrecedent = current_esp
     userGame.save()
 
@@ -73,10 +75,6 @@ def create_ia(form) :
     epsilon = form.cleaned_data["epsilonGreedy"]
     learningRate = form.cleaned_data["learningRate"]
     gamma = form.cleaned_data["gamma"]
-
-    print(epsilon)
-    print(learningRate)
-    print(gamma)
 
     ia = AI.objects.create(epsilon_greedy=epsilon, learning_rate=learningRate, gamma=gamma)
 

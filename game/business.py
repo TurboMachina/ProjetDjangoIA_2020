@@ -35,8 +35,6 @@ def maj_pos(newPosX, newPosY, gameDTO) :
 def move(userGame, moveX, moveY, gameDTO) :
     newPosX = userGame.posUserX + moveX
     newPosY = userGame.posUserY + moveY
-    print(newPosX)
-    print(newPosY)
 
     maj_pos(newPosX, newPosY, gameDTO)
 
