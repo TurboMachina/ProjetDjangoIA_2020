@@ -2,6 +2,8 @@
 {% load static %}
 {% block content %}
 <h1>Training form</h1>
+<p>We have let you the opportunity to train an AI, but this process can take a lot of time...<br>
+     We advice you not to train the AI more then a couple of times</p>
 <form method="POST" action="/game/trainAI/{{ia_id}}/">
     {% csrf_token %}
     {{ form }}
