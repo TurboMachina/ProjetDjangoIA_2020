@@ -51,3 +51,8 @@ class ColorAlreadyTakenError(Error) :
 class ForbidenColorError(ColorError) :
     def __init__(self) : 
         self.message = "this color is forbiden"
+
+
+class NumberOfGameNotValid(Error) :
+    def __init__(self) :
+        self.message = "number of games is not valid"

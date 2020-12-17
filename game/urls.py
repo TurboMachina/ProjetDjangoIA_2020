@@ -14,4 +14,6 @@ urlpatterns = [
     path("startGame/<str:game_id>/", views.start_game),
     path("createGameVsAiForm/<str:ia_id>/", views.create_game_vs_ia_form),
     path("createGameVsAi/<str:ia_id>/", views.create_game_vs_ia),
+    path("trainAIForm/<str:ia_id>/", views.train_form_ia),
+    path("trainAI/<str:ia_id>/", views.train_ia)
 ]

@@ -10,7 +10,8 @@
     {% for ia in listIA %}
     <tr>
         <td>{{ia.id}}</td>
-        <td><a class=button href="/game/createGameVsAiForm/{{ia.id}}">play</a></td>
+        <td><a class=button href="/game/createGameVsAiForm/{{ia.id}}/">play</a></td>
+        <td><a class=button href="/game/trainAIForm/{{ia.id}}/">train</a></td>
     </tr>
     {% endfor %}
 </table>

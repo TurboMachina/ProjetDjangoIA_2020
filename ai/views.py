@@ -26,15 +26,3 @@ def list_ia(request) :
     IAList = business.list_ia()
     return render(request, "ai/listIA.html", {"listIA": IAList})
 
-
-class IATrainForm(forms.Form) :
-    numberOfGames = forms.IntegerField(min_value=0)
-
-def train_form_ia(request, ia_id) :
-    return render(request, "game/trainFormIa.html", {"ia_id" : ia_id, "form" : IATrainForm()})
-
-
-def train_ia(request, ia_id) :
-    ia = business.train_ia(ia_id, IATrainForm(request.POST))
-    return redirect("/game/")
-

@@ -10,11 +10,12 @@ from django.core.exceptions import ObjectDoesNotExist
 def take_action(epsilon, state, possible_moves):
     esp = 0
     if random.uniform(0, 1) < epsilon:
-        action = possible_moves[randint(0, len(possible_moves))]
-        esp = Esperance.objects.filter(state__id=state.id, move__moveX=action[0], move__moveY=action[1])
+        action = possible_moves[randint(0, len(possible_moves)) - 1]
+        esp = Esperance.objects.filter(state__id=state.id, move__moveX=action[0], move__moveY=action[1]).first()
+        print("explore")
     else:
         best_esperance = Esperance.objects.filter(state__id=state.id).order_by("-esperance").first()
-
+        print("exploite")
         action = [best_esperance.move.moveX, best_esperance.move.moveY]
         esp = best_esperance
 
@@ -72,6 +73,10 @@ def create_ia(form) :
     epsilon = form.cleaned_data["epsilonGreedy"]
     learningRate = form.cleaned_data["learningRate"]
     gamma = form.cleaned_data["gamma"]
+
+    print(epsilon)
+    print(learningRate)
+    print(gamma)
 
     ia = AI.objects.create(epsilon_greedy=epsilon, learning_rate=learningRate, gamma=gamma)
 

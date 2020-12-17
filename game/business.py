@@ -220,6 +220,33 @@ def join_game(game_id, user, form) :
 
     gameModels.UserGame.objects.create(userId=user, game=game, color=hex_color, userNumber=2)
 
+def train(ia_id, form) :
+    if not form.is_valid() :
+        raise NumberOfGameNotValid()
+    nb_games = int(form.cleaned_data["numberOfGames"])
+    for __ in range(nb_games) :
+        game = gameModels.Game.objects.create()
+
+        ia = AI.objects.filter(id=ia_id).first()
+        
+        userGame1 = gameModels.UserGame.objects.create(game=game, ia=ia, color=0, userNumber=1)
+        userGame2 = gameModels.UserGame.objects.create(game=game, ia=ia, color=1, userNumber=2)
+        userGames = [userGame1, userGame2]
+
+        gameDTO = mapGame(game)
+        gameDTO.init_board()
+        gameDTO.turn = random_user_number()
+        
+        save_game_state(game, gameDTO)
+
+        assign_duo(userGame1, userGame2)
+
+        while not gameDTO.game_over() :
+            current_userGame = userGames[gameDTO.turn - 1]
+            (moveX, moveY) = play(userGame1.posUserX, userGame1.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, current_userGame, gameDTO.possible_actions(current_userGame.posUserX, current_userGame.posUserY, current_userGame.userNumber), gameDTO.turn)
+            (newPosX, newPosY) = move(current_userGame, moveX, moveY, gameDTO)
+            save_move(current_userGame, newPosX, newPosY, game, gameDTO)
+
 
 # Entrainement des IA, (IA contre IA)
 """

@@ -110,3 +110,19 @@ def create_game_vs_ia(request, ia_id) :
     except Error as error :
         return render(request, "game/errorPage.html", {"error_message" : error.message})
     return redirect("/game/resumeGame/" + str(game.id) + "/")
+
+
+
+class IATrainForm(forms.Form) :
+    numberOfGames = forms.IntegerField(label="number of games", min_value=0)
+
+def train_form_ia(request, ia_id) :
+    return render(request, "game/trainForm.html", {"ia_id" : ia_id, "form" : IATrainForm()})
+
+
+def train_ia(request, ia_id) :
+    try :
+        business.train(ia_id, IATrainForm(request.POST))
+    except Error as error :
+        return render(request, "game/errorPage.html", {"error_message" : error.message})
+    return redirect("/game/")
