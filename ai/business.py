@@ -1,5 +1,7 @@
 from random import randint
 import random
+
+from ai.error import NotValidAIError
 from game.DTO import Game
 from game.DTO import User
 from ai.models import *
