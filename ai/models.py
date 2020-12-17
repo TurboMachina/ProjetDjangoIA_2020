@@ -28,4 +28,4 @@ class Move(models.Model):
 class Esperance(models.Model):
     state = models.ForeignKey(State, on_delete = models.CASCADE)
     move = models.ForeignKey(Move, on_delete=models.CASCADE)
-    esperance = MinMaxFloat(validators=[MinValueValidator(0), MaxValueValidator(1)])
+    esperance = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(1)])

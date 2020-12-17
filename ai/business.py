@@ -10,12 +10,17 @@ from django.core.exceptions import ObjectDoesNotExist
 def take_action(epsilon, state, possible_moves):
     esp = 0
     if random.uniform(0, 1) < epsilon:
+        print("explore")
         action = possible_moves[randint(0, len(possible_moves)) - 1]
         esp = Esperance.objects.filter(state__id=state.id, move__moveX=action[0], move__moveY=action[1]).first()
-        print("explore")
     else:
-        best_esperance = Esperance.objects.filter(state__id=state.id).order_by("-esperance").first()
         print("exploite")
+        best_esperance = Esperance.objects.filter(state__id=state.id).order_by("-esperance").first()
+        esps = Esperance.objects.filter(state_id=state.id)
+        for esp in esps :
+            print(esp.esperance)
+        print("best")
+        print(best_esperance.esperance)
         action = [best_esperance.move.moveX, best_esperance.move.moveY]
         esp = best_esperance
 
@@ -48,10 +53,10 @@ def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possi
     prevEsp = Esperance.objects.filter(userGames__id=userGame.id).first()
 
     for line in game_state :
-        lineStr = ""
+        lineStr = "["
         for elem in line :
             lineStr += str(elem)
-        print(lineStr)
+        print(lineStr + "]")
 
     if prevEsp :
         action_reward = reward(game_state, turn)
@@ -71,7 +76,7 @@ def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possi
 
 def create_ia(form) :
     if not form.is_valid() :
-        pass
+        raise NotValidAIError()
     epsilon = form.cleaned_data["epsilonGreedy"]
     learningRate = form.cleaned_data["learningRate"]
     gamma = form.cleaned_data["gamma"]
