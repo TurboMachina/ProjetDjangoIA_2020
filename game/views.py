@@ -97,10 +97,8 @@ def apply_move(request, game_id) :
 class Vs_ia_form(Color_player_form) :
     ia_color = forms.CharField(label='AI color', max_length=7, widget=forms.TextInput(attrs={'type': 'color'}))
   
-
 def create_game_vs_ia_form(request, ia_id) :
     return render(request, "game/gameVsIaForm.html", {"ia_id" : ia_id, "form" : Vs_ia_form()})
-
 
 def create_game_vs_ia(request, ia_id) :
     try :
