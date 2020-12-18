@@ -1,3 +1,7 @@
+#-----------------------------------------------------------------------------------------------
+# Views for the game
+#-----------------------------------------------------------------------------------------------
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required # permet de limiter les views aux utilisateurs connectés
@@ -79,8 +83,6 @@ def index(request):
     if request.method == "GET":
         return render(request, "game/index.html")
 
-
-
 def ComplexHandler(Obj):
     if hasattr(Obj, 'to_json'):
         return Obj.to_json()
@@ -93,6 +95,8 @@ def apply_move(request, game_id) :
         return JsonResponse(data={"error_message" : error.message}, status=400)
     return JsonResponse(json.dumps(game, default=ComplexHandler), safe=False)
 
+
+# ------------------------------------------------ GAME WITH AN AI ----------------------------------------------------------
 
 class Vs_ia_form(Color_player_form) :
     ia_color = forms.CharField(label='AI color', max_length=7, widget=forms.TextInput(attrs={'type': 'color'}))
@@ -108,8 +112,6 @@ def create_game_vs_ia(request, ia_id) :
     except Error as error :
         return render(request, "game/errorPage.html", {"error_message" : error.message})
     return redirect("/game/resumeGame/" + str(game.id) + "/")
-
-
 
 class IATrainForm(forms.Form) :
     numberOfGames = forms.IntegerField(label="number of games", min_value=0)

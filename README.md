@@ -10,6 +10,8 @@ Notre projet est découpé en trois applications, la connection, le jeu et l'int
 - Premièrement, l'application "connection" reprend le model, les vues et les templates utilent à la connection <br>
 - Ensuite, l'application "game" permet de s'occuper de la logique relative à une partie <br>
 - Pour finir, l'application "ai", gère toute la logique de cette dernière <br>
+<br>
+Vous pouvez également trouver le schéma de base de données dans les fichier au dessus. (Schema-BD.png)
 
 
 ### Notre Intelligence Artificielle 

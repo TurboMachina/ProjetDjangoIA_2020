@@ -1,5 +1,8 @@
-from django.db.models import Count, Q
+#-----------------------------------------------------------------------------------------------
+# Logic of a game
+#-----------------------------------------------------------------------------------------------
 
+from django.db.models import Count, Q
 from game.DTO import *
 import random
 import game.models as gameModels
@@ -11,16 +14,11 @@ from ai.models import *
 def random_user_number() :
     return random.randint(1,2)
 
-#_______________________________________________________________________________
-# FONCTION PRINCIPALE POUR JOUER
-#_______________________________________________________________________________
-
-
 def ia_plays(userGame, iaDTO, game, gameDTO) :
     userGame.move()
     if game.game_over() :
         gameDTO.winner = gameDTO.get_winner()
-    gameDTO.next_turn() # TODO recup le move et mettre à jour le userGame
+    gameDTO.next_turn() 
 
 
 def maj_pos(newPosX, newPosY, gameDTO) :
@@ -35,9 +33,7 @@ def maj_pos(newPosX, newPosY, gameDTO) :
 def move(userGame, moveX, moveY, gameDTO) :
     newPosX = userGame.posUserX + moveX
     newPosY = userGame.posUserY + moveY
-
     maj_pos(newPosX, newPosY, gameDTO)
-
     return (newPosX, newPosY)
 
 
@@ -56,7 +52,6 @@ def save_game_state(game, gameDTO) :
 
 def save_move(userGame, newPosX, newPosY, game, gameDTO) :
     save_userGame(userGame, newPosX, newPosY)
-
     save_game_state(game, gameDTO)
 
 
@@ -87,16 +82,7 @@ def start_game(game_id, user) :
     save_game_state(game, gameDTO)
 
     userGames = gameModels.UserGame.objects.filter(game__id=game.id)
-    """
-    for userGame in userGames :
-        if userGame.userNumber == 1 :
-            assign_pos(userGame, 0)
-        elif userGame.userNumber == 2 :
-            assign_pos(userGame, gameDTO.col_size - 1)
-        if userGame.ia and userGame.userNumber == game.currentUser :
-            ia_plays(userGame, mapIA(userGame), game, gameDTO) # TODO modifier appel de l'ia
-        userGame.save()
-    """
+
     if userGames[0].userNumber == 1:
         assign_duo(userGames[0], userGames[1])
         userGame1, userGame2 = userGames[0], userGames[1]
@@ -244,34 +230,3 @@ def train(ia_id, form) :
             (moveX, moveY) = play(userGame1.posUserX, userGame1.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, current_userGame, gameDTO.possible_actions(current_userGame.posUserX, current_userGame.posUserY, current_userGame.userNumber), gameDTO.turn)
             (newPosX, newPosY) = move(current_userGame, moveX, moveY, gameDTO)
             save_move(current_userGame, newPosX, newPosY, game, gameDTO)
-
-
-# Entrainement des IA, (IA contre IA)
-"""
-def train(self, ia_id, number_games) :
-    ia = models.IA.objects.get(id=ia_id)
-    players = list()
-    posX = 0
-    posY = 0
-    for i in range(1, 3) :
-        if i == 2 :
-            posX = 7
-            posY = 7
-
-        players.append(IA(0, i, posX, posY, epsilon=ia.epsilonGreedy, learning_rate=ia.learningRate))
-
-    game = Game(players) # ajout params en fonction du code de jordan(TODO)
-def train(self, ia1, ia2, number_games) :
-    players = [ia1, ia2]
-    game = Game(players) # ajout params 
-
-    for game in range(number_games) : 
-        game.init_board()
-        while not game.game_over() :
-            players[game.turn - 1].play(game)
-            game.next_turn()
-        
-    ia.qtable = players[1].qTable
-    ia.save()
-
-"""

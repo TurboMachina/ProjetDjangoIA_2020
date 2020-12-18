@@ -1,6 +1,9 @@
+#-----------------------------------------------------------------------------------------------
+# AI's logic
+#-----------------------------------------------------------------------------------------------
+
 from random import randint
 import random
-
 from ai.error import NotValidAIError
 from game.DTO import Game
 from game.DTO import User
@@ -65,9 +68,6 @@ def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possi
         
         __, best_current_esperance = take_action(0.0, state, possible_moves) 
 
-        #current_esperance.esperance = Esperance.objects.get(fk = state, fk = action)
-
-        #prevEsp.esperance = current_esperance.esperance + learning_rate * (action_reward + gama * prevEsp.esperance - current_esperance.esperance))
         prevEsp.esperance = prevEsp.esperance + userGame.ia.learning_rate * (float(action_reward) + userGame.ia.gamma * best_current_esperance.esperance - prevEsp.esperance)
         prevEsp.save()
     userGame.movePrecedent = current_esp

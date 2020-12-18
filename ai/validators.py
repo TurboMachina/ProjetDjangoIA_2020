@@ -1,5 +1,8 @@
-from django.db import models
+#-----------------------------------------------------------------------------------------------
+# Validators for the AI parameters (When creating an AI)
+#-----------------------------------------------------------------------------------------------
 
+from django.db import models
 
 class MinMaxFloat(models.IntegerField):
     def __init__(self, min_value=None, max_value=None, *args, **kwargs):

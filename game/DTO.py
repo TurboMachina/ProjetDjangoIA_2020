@@ -1,10 +1,10 @@
-#_______________________________________________________________________________
-# CLASS USER
-#_______________________________________________________________________________
+#-----------------------------------------------------------------------------------------------
+# DTO for the game
+#-----------------------------------------------------------------------------------------------
 
+# ------------------------------------------------ GAME ----------------------------------------------------------
 class User :
 
-    # Constructeur d'un User
     def __init__(self, user_id, username, color, posX, posY, userNumber):
         self._id = user_id
         self._username = username
@@ -13,7 +13,6 @@ class User :
         self._posY = posY
         self._userNumber = userNumber
 
-    # Getters utiles
     @property
     def id(self):
         return self._id
@@ -49,13 +48,9 @@ class User :
     def to_json(self) :
         return self.__dict__
 
-#_______________________________________________________________________________
-# CLASS GAME
-#_______________________________________________________________________________
-
+# ------------------------------------------------ GAME ----------------------------------------------------------
 class Game : 
     
-    # Constructeur d'une game
     def __init__(self, id, gameState=None, turn=0, winner=None, players=[]):
         self._id = id
         self._gameState = gameState
@@ -65,8 +60,6 @@ class Game :
         self._turn = turn # Initialiser le tour a 0
         self._winner = winner
 
-
-    # Getters utiles
     @property
     def id(self):
         return id
@@ -114,9 +107,7 @@ class Game :
     def to_json(self) :
         return self.__dict__
 
-# --------------------- METHODES GENERALEs AU JEU ---------------------
-
-    # Initialisation board
+# ------------------------------------------------ MAIN LOGIC OF A GAME ----------------------------------------------------------
     def init_board(self):
         gameState = list()
         for _ in range(self.col_size) :
@@ -131,11 +122,9 @@ class Game :
         self.cells_left -= 2
         self.gameState = gameState
 
-    # Passe au joueur suivant (UserNumber est soit 1 soit 2)
     def next_turn(self) :
         self.turn = self.turn % 2 + 1
 
-    # Savoir si la game est finie
     def game_over(self) :
         for line in self.gameState :
             if 0 in line :
@@ -156,17 +145,12 @@ class Game :
 
     def update_current_cells(self, x, y, turn) :
         self.gameState[x][y] = turn
-            # function qui remplit les cases prisent
 
-    ### si elle prennait une position plutôt qu'un mouvement elle pourrait être utilisée dans lock_won_lock avec un for 
-    ### 
     def update_board(self, userNumber, position) : 
         self.update_current_cells(position["posX"], position["posY"], userNumber)
         self.lock_won_block(self.gameState, position["posX"], position["posY"], userNumber)
 
-
-
-# --------------------- METHODES VERIFIANT SI LE MOVEMENT EST OK ---------------------
+# --------------------------------------- LOGIC TO CHECK IF A MOVE IS POSSIBLE --------------------------------------------------
 
     # On avance en dehors du tableau
     def is_out_of_limits(self, x, y) : 

@@ -1,3 +1,7 @@
+#-----------------------------------------------------------------------------------------------
+# Views for the connection (login/register/logout)
+#-----------------------------------------------------------------------------------------------
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django import forms
