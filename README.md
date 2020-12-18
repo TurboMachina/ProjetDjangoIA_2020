@@ -89,7 +89,7 @@ https://docs.docker.com/compose/
 https://www.postgresql.org/docs/
 
 ---
-Toute information relative au projet se trouve dans le dossier. <br>
+Toute autre information relative au projet se trouve dans le dossier d'analyse. <br>
 
 ---
 
