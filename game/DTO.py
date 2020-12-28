@@ -1,17 +1,17 @@
-#-----------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------
 # DTO for the game
-#-----------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------
 
 # ------------------------------------------------ GAME ----------------------------------------------------------
-class User :
+class User:
 
-    def __init__(self, user_id, username, color, posX, posY, userNumber):
+    def __init__(self, user_id, username, color, pos_x, pos_y, user_number):
         self._id = user_id
         self._username = username
         self._color = "#{0:06x}".format(color)
-        self._posX = posX
-        self._posY = posY
-        self._userNumber = userNumber
+        self._pos_x = pos_x
+        self._pos_y = pos_y
+        self._user_number = user_number
 
     @property
     def id(self):
@@ -26,38 +26,41 @@ class User :
         return self._color
 
     @property
-    def posX(self):
-        return self._posX
+    def pos_x(self):
+        return self._pos_x
 
     @property
-    def posY(self):
-        return self._posY
+    def pos_y(self):
+        return self._pos_y
 
-    @posX.setter
-    def posX(self, posX):
-        self._posX = posX
+    @pos_x.setter
+    def pos_x(self, pos_x):
+        self._pos_x = pos_x
 
-    @posY.setter
-    def posY(self, posY):
-        self._posY = posY
+    @pos_y.setter
+    def pos_y(self, pos_y):
+        self._pos_y = pos_y
 
     @property
-    def userNumber(self) :
-        return self._userNumber
-    
-    def to_json(self) :
+    def user_number(self):
+        return self._user_number
+
+    def to_json(self):
         return self.__dict__
 
+
 # ------------------------------------------------ GAME ----------------------------------------------------------
-class Game : 
-    
-    def __init__(self, id, gameState=None, turn=0, winner=None, players=[]):
+class Game:
+
+    def __init__(self, id, game_state=None, turn=0, winner=None, players=None):
+        if players is None:
+            players = []
         self._id = id
-        self._gameState = gameState
+        self._game_state = game_state
         self._players = players
-        self._col_size = 8 # Initialiser la taille des column à 8
-        self._cells_left = self._col_size**2 # Initialiser le nombre de case non prise a 64 ou col_size^2
-        self._turn = turn # Initialiser le tour a 0
+        self._col_size = 8  # Initialiser la taille des column à 8
+        self._cells_left = self._col_size ** 2  # Initialiser le nombre de case non prise a 64 ou col_size^2
+        self._turn = turn  # Initialiser le tour a 0
         self._winner = winner
 
     @property
@@ -67,20 +70,23 @@ class Game :
     @property
     def winner(self):
         return self._winner
+
     @winner.setter
-    def winner(self, winner) :
+    def winner(self, winner):
         self._winner = winner
 
     @property
-    def gameState(self):
-        return self._gameState
-    @gameState.setter
-    def gameState(self, gameState) :
-        self._gameState = gameState
+    def game_state(self):
+        return self._game_state
+
+    @game_state.setter
+    def game_state(self, game_state):
+        self._game_state = game_state
 
     @property
     def cells_left(self):
         return self._cells_left
+
     @cells_left.setter
     def cells_left(self, cells_left):
         self._cells_left = cells_left
@@ -88,9 +94,10 @@ class Game :
     @property
     def turn(self):
         return self._turn
+
     @turn.setter
-    def turn(self, turn) :
-        if turn > 0 and turn <= 2 :
+    def turn(self, turn):
+        if 0 < turn <= 2:
             self._turn = turn
 
     @property
@@ -100,42 +107,45 @@ class Game :
     @property
     def players(self):
         return self._players
+
     @players.setter
     def players(self, players):
         self._players = players
-    
-    def to_json(self) :
+
+    def to_json(self):
         return self.__dict__
 
-# ------------------------------------------------ MAIN LOGIC OF A GAME ----------------------------------------------------------
+    # ------------------------------------------------ MAIN LOGIC OF A GAME ----------------------------------------------------------
+
     def init_board(self):
-        gameState = list()
-        for _ in range(self.col_size) :
+        game_state = list()
+        for _ in range(self.col_size):
             line = list()
-            for _ in range(self.col_size) :
+            for _ in range(self.col_size):
                 line.append(0)
-            gameState.append(line)
+            game_state.append(line)
 
-        gameState[0][0] = 1
-        gameState[self.col_size - 1][self.col_size - 1] = 2
-        
+        game_state[0][0] = 1
+        game_state[self.col_size - 1][self.col_size - 1] = 2
+
         self.cells_left -= 2
-        self.gameState = gameState
+        self.game_state = game_state
 
-    def next_turn(self) :
+    def next_turn(self):
         self.turn = self.turn % 2 + 1
 
-    def game_over(self) :
-        for line in self.gameState :
-            if 0 in line :
+    def game_over(self):
+        for line in self.game_state:
+            if 0 in line:
                 return False
         return True
-    def get_state1(self) : 
+
+    def get_state1(self):
         return self.cells_left == 0
-    
+
     def get_winner(self):
-        points = {"1" : 0, "2" : 0}
-        for line in self.gameState:
+        points = {"1": 0, "2": 0}
+        for line in self.game_state:
             for column in line:
                 points[str(column)] = points[str(column)] + 1
 
@@ -143,68 +153,74 @@ class Game :
             return 1
         return 2
 
-    def update_current_cells(self, x, y, turn) :
-        self.gameState[x][y] = turn
+    def update_current_cells(self, x, y, turn):
+        self.game_state[x][y] = turn
 
-    def update_board(self, userNumber, position) : 
-        self.update_current_cells(position["posX"], position["posY"], userNumber)
-        self.lock_won_block(self.gameState, position["posX"], position["posY"], userNumber)
+    def update_board(self, user_number, position):
+        self.update_current_cells(position["posX"], position["posY"], user_number)
+        self.lock_won_block(self.game_state, position["posX"], position["posY"], user_number)
 
-# --------------------------------------- LOGIC TO CHECK IF A MOVE IS POSSIBLE --------------------------------------------------
+    # --------------------------------------- LOGIC TO CHECK IF A MOVE IS POSSIBLE --------------------------------------------------
 
     # On avance en dehors du tableau
-    def is_out_of_limits(self, x, y) : 
+    def is_out_of_limits(self, x, y):
         return x < 0 or x >= self.col_size or y < 0 or y >= self.col_size
-    
-    def cell_already_taken(self, x, y, turn) :
-        return (self.gameState[x][y] != turn and self.gameState[x][y] != 0)
+
+    def cell_already_taken(self, x, y, turn):
+        return (self.game_state[x][y] != turn and self.game_state[x][y] != 0)
         # function qui regarde si il ne va pas sur une case de ladversaire
 
-    def movement_ok(self, movement, turn) :
-        return not self.is_out_of_limits(movement["x"], movement["y"]) and not self.cell_already_taken(movement["x"], movement["y"], turn)
+    def movement_ok(self, movement, turn):
+        return not self.is_out_of_limits(movement["x"], movement["y"]) and not self.cell_already_taken(movement["x"],
+                                                                                                       movement["y"],
+                                                                                                       turn)
 
     # fonction qui vérifie et update un bloc de cases capturées
     # x et y = position prise par le joueur UserNumber
     # les coordonées utilisées par le système de lock_zone ne suivent pas les conventions du projet
-    def lock_won_block(self, boards, x, y, userNumber):
+    def lock_won_block(self, boards, x, y, user_number):
         lookup_table = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-        opponent = userNumber % 2 + 1
+        opponent = user_number % 2 + 1
         directionnal_cells = [[], [], [], []]
         direction = 0
         for look in lookup_table:
             nextx = x + look[0]
             nexty = y + look[1]
             if (not self.is_out_of_limits(nextx, nexty)) and boards[nextx][nexty] == 0:
-                self.find_won_block(boards, nextx, nexty, lookup_table, userNumber, opponent, directionnal_cells[direction])
-                self.fillZone(boards, userNumber, directionnal_cells[direction])
+                self.find_won_block(boards, nextx, nexty, lookup_table, user_number, opponent,
+                                    directionnal_cells[direction])
+                self.fill_zone(boards, user_number, directionnal_cells[direction])
                 direction += 1
 
-    def find_won_block(self, boards, x, y, lookupTable, userNumber, opponent, cellsVisited):
-        for look in lookupTable:
-            nextx = x + look[0]
-            nexty = y + look[1]
+    def find_won_block(self, boards, x, y, lookup_table, user_number, opponent, cells_visited):
+        for look in lookup_table:
+            next_x = x + look[0]
+            next_y = y + look[1]
 
-            cellsVisited.append((x, y, True))
+            cells_visited.append((x, y, True))
 
-            if not self.is_out_of_limits(nextx, nexty) and (nextx, nexty, False) not in cellsVisited and (nextx, nexty, True) not in cellsVisited and boards[nextx][nexty] != userNumber:  # on continue a chercher mais on arrive a un bord ou déjà fait
-                if boards[nextx][nexty] == opponent:  # pas un enclos
-                    cellsVisited.append((x, y, False))
+            if not self.is_out_of_limits(next_x, next_y) and (next_x, next_y, False) not in cells_visited and (
+                    next_x, next_y, True) not in cells_visited and boards[next_x][
+                next_y] != user_number:  # on continue a chercher mais on arrive a un bord ou déjà fait
+                if boards[next_x][next_y] == opponent:  # pas un enclos
+                    cells_visited.append((x, y, False))
                     return None
 
-                self.find_won_block(boards, nextx, nexty, lookupTable, userNumber, opponent,cellsVisited)  # on continue a chercher
+                self.find_won_block(boards, next_x, next_y, lookup_table, user_number, opponent,
+                                    cells_visited)  # on continue a chercher
 
-    def fillZone(self, boards, userNumber, cellVisited):
+    def fill_zone(self, boards, user_number, cell_visited):
         to_be_filled = True
-        for cell in cellVisited:
+        for cell in cell_visited:
             if not cell[2]:
                 to_be_filled = False
         if to_be_filled:
-            for cell in cellVisited:
-                boards[cell[0]][cell[1]] = userNumber
+            for cell in cell_visited:
+                boards[cell[0]][cell[1]] = user_number
 
-    def possible_actions(self, posX, posY, playerNumber) :
+    def possible_actions(self, pos_x, pos_y, player_number):
         actions = list()
-        for action in [[0, 1], [0, -1], [1, 0], [-1, 0]] :
-            if self.movement_ok({"x" : posX + action[0], "y" : posY + action[1]}, playerNumber) :
+        for action in [[0, 1], [0, -1], [1, 0], [-1, 0]]:
+            if self.movement_ok({"x": pos_x + action[0], "y": pos_y + action[1]}, player_number):
                 actions.append(action)
         return actions
