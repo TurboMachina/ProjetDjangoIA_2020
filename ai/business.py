@@ -15,17 +15,17 @@ from django.core.exceptions import ObjectDoesNotExist
 def take_action(epsilon, state, possible_moves):
     esp = 0
     if random.uniform(0, 1) < epsilon:
-        # print("explore")
+        print("explore")
         action = possible_moves[randint(0, len(possible_moves)) - 1]
         esp = Esperance.objects.filter(state__id=state.id, move__moveX=action[0], move__moveY=action[1]).first()
     else:
-        # print("exploite")
+        print("exploite")
         best_esperance = Esperance.objects.filter(state__id=state.id).order_by("-esperance").first()
         esps = Esperance.objects.filter(state_id=state.id)
-        # for esp in esps :
-            # print(esp.esperance)
-        # print("best")
-        # print(best_esperance.esperance)
+        for esp in esps:
+            print(esp.esperance)
+        print("--- !best! ---")
+        print(best_esperance.esperance)
         action = [best_esperance.move.moveX, best_esperance.move.moveY]
         esp = best_esperance
 
@@ -67,7 +67,7 @@ def play(posXUser1, posYUser1, posXUser2, posYUser2, game_state, userGame, possi
         action_reward = reward(game_state, turn)
         
         __, best_current_esperance = take_action(0.0, state, possible_moves) 
-
+        print("Previous esperance : "+str(prevEsp.esperance))
         prevEsp.esperance = prevEsp.esperance + userGame.ia.learning_rate * (float(action_reward) + userGame.ia.gamma * best_current_esperance.esperance - prevEsp.esperance)
         prevEsp.save()
     userGame.movePrecedent = current_esp

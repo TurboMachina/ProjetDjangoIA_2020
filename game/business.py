@@ -237,9 +237,11 @@ def train(ia_id, form):
         save_game_state(game, gameDTO)
 
         assign_duo(userGame1, userGame2)
-
+        nb_actions = 0
         while not gameDTO.game_over() :
+            nb_actions += 1
             current_userGame = userGames[gameDTO.turn - 1]
             (moveX, moveY) = play(userGame1.posUserX, userGame1.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, current_userGame, gameDTO.possible_actions(current_userGame.posUserX, current_userGame.posUserY, current_userGame.userNumber), gameDTO.turn)
             (newPosX, newPosY) = move(current_userGame, moveX, moveY, gameDTO)
             save_move(current_userGame, newPosX, newPosY, game, gameDTO)
+        print(nb_actions)
