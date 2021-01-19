@@ -10,6 +10,9 @@ from game.error import *
 from game.mapper import *
 from ai.business import play
 from ai.models import *
+import time
+
+from datetime import datetime
 
 def random_user_number() :
     return random.randint(1,2)
@@ -204,11 +207,21 @@ def join_game(game_id, user, form) :
 
     gameModels.UserGame.objects.create(userId=user, game=game, color=hex_color, userNumber=2)
 
-def train(ia_id, form) :
-    if not form.is_valid() :
+def train(ia_id, form):
+    if not form.is_valid():
         raise NumberOfGameNotValid()
     nb_games = int(form.cleaned_data["numberOfGames"])
-    for __ in range(nb_games) :
+    start_time = time.time()
+    for i in range(nb_games):
+
+        print("Game number : "+str(i))
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print("Current Time =", current_time)
+
+        print("Time taken : %s seconds ---" % (time.time() - start_time))
+        start_time = time.time()
+
         game = gameModels.Game.objects.create()
 
         ia = AI.objects.filter(id=ia_id).first()
