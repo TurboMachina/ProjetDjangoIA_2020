@@ -24,7 +24,7 @@ def take_action(epsilon, state, possible_moves):
         esps = Esperance.objects.filter(state_id=state.id)
         for esp in esps:
             print(esp.esperance)
-        print("best")
+        print("--- !best! ---")
         print(best_esperance.esperance)
         action = [best_esperance.move.moveX, best_esperance.move.moveY]
         esp = best_esperance
@@ -56,8 +56,11 @@ def play(pos_x_user1, pos_y_user1, pos_x_user2, pos_y_user2, game_state, user_ga
         for move in moves:
             Esperance.objects.create(move=move, state=state, esperance=0)
 
-    action, current_esp = take_action(user_game.ia.epsilon_greedy, state, possible_moves)
-    prev_esp = Esperance.objects.filter(userGames__id=user_game.id).first()
+    # for line in game_state :
+    #     lineStr = "["
+    #     for elem in line :
+    #         lineStr += str(elem)
+    #     print(lineStr + "]")
 
     for line in game_state:
         line_str = "["
@@ -67,8 +70,13 @@ def play(pos_x_user1, pos_y_user1, pos_x_user2, pos_y_user2, game_state, user_ga
 
     if prev_esp:
         action_reward = reward(game_state, turn)
-
-        __, best_current_esperance = take_action(0.0, state, possible_moves)
+        
+        __, best_current_esperance = take_action(0.0, state, possible_moves) 
+        print("Previous esperance : "+str(prevEsp.esperance))
+        prevEsp.esperance = prevEsp.esperance + userGame.ia.learning_rate * (float(action_reward) + userGame.ia.gamma * best_current_esperance.esperance - prevEsp.esperance)
+        prevEsp.save()
+    userGame.movePrecedent = current_esp
+    userGame.save()
 
         prev_esp.esperance = prev_esp.esperance + user_game.ia.learning_rate * (
                     float(action_reward) + user_game.ia.gamma * best_current_esperance.esperance - prev_esp.esperance)

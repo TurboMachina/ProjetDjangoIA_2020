@@ -10,7 +10,12 @@ from game.error import *
 from game.mapper import *
 from ai.business import play
 from ai.models import *
+import time
 
+from datetime import datetime
+
+def random_user_number() :
+    return random.randint(1,2)
 
 def random_user_number():
     return random.randint(1, 2)
@@ -212,13 +217,22 @@ def join_game(game_id, user, form):
 
     gmodels.user_game.objects.create(userId=user, game=game, color=hex_color, userNumber=2)
 
-
 def train(ia_id, form):
     if not form.is_valid():
         raise NumberOfGameNotValid()
     nb_games = int(form.cleaned_data["numberOfGames"])
-    for __ in range(nb_games):
-        game = gmodels.Game.objects.create()
+    start_time = time.time()
+    for i in range(nb_games):
+
+        print("Game number : "+str(i))
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print("Current Time =", current_time)
+
+        print("Time taken : %s seconds ---" % (time.time() - start_time))
+        start_time = time.time()
+
+        game = gameModels.Game.objects.create()
 
         ia = AI.objects.filter(id=ia_id).first()
 
@@ -232,13 +246,12 @@ def train(ia_id, form):
 
         save_game_state(game, gameDTO)
 
-        assign_duo(user_game1, user_game2)
-
-        while not gameDTO.game_over():
-            current_user_game = user_games[gameDTO.turn - 1]
-            (moveX, moveY) = play(user_game1.posUserX, user_game1.posUserY, user_game2.posUserX, user_game2.posUserY,
-                                  gameDTO.gameState, current_user_game,
-                                  gameDTO.possible_actions(current_user_game.posUserX, current_user_game.posUserY,
-                                                           current_user_game.userNumber), gameDTO.turn)
-            (newPosX, newPosY) = move(current_user_game, moveX, moveY, gameDTO)
-            save_move(current_user_game, newPosX, newPosY, game, gameDTO)
+        assign_duo(userGame1, userGame2)
+        nb_actions = 0
+        while not gameDTO.game_over() :
+            nb_actions += 1
+            current_userGame = userGames[gameDTO.turn - 1]
+            (moveX, moveY) = play(userGame1.posUserX, userGame1.posUserY, userGame2.posUserX, userGame2.posUserY, gameDTO.gameState, current_userGame, gameDTO.possible_actions(current_userGame.posUserX, current_userGame.posUserY, current_userGame.userNumber), gameDTO.turn)
+            (newPosX, newPosY) = move(current_userGame, moveX, moveY, gameDTO)
+            save_move(current_userGame, newPosX, newPosY, game, gameDTO)
+        print(nb_actions)
